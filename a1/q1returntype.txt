@@ -1,0 +1,111 @@
+------------------------------------------------------------
+
+(b)
+
+------------------------------------------------------------
+i. Timing Results:
+------------------------------------------------------------
+Arguments Passed: 100000000 10000 1003
+
+Unoptimized Executables:
+1. exception:       4.48u 0.00s 0:04.48
+2. returnglobal:    4.58u 0.00s 0:04.62
+3. returntype:     19.53u 0.00s 0:19.57
+4. returntypec:     4.65u 0.00s 0:04.67
+
+Optimized Executables (-O2):
+5. exception:       3.62u 0.00s 0:03.62
+6. returnglobal:    3.77u 0.00s 0:03.77
+7. returntype:      5.92u 0.00s 0:05.93
+8. returntypec:     3.86u 0.00s 0:03.86
+
+------------------------------------------------------------
+ii. Performance Difference Between Original and Transformed Programs (Unoptimized):
+- exception vs. returnglobal:
+  Difference: 4.58u - 4.48u = 0.10u
+  Reason: The global flag mechanism introduces minor overhead compared to the exception-based approach.
+
+- exception vs. returntype:
+  Difference: 19.53u - 4.48u = 15.05u
+  Reason: `std::variant` in the return type incurs significant overhead due to type checking, construction, and destruction for each return value.
+
+- exception vs. returntypec:
+  Difference: 4.65u - 4.48u = 0.17u
+  Reason: The tagged union approach in C is efficient but slightly slower due to manual handling of type tags and union unpacking.
+
+------------------------------------------------------------
+iii. Performance Difference Between Original and Transformed Programs (Optimized):
+- exception vs. returnglobal:
+  Difference: 3.77u - 3.62u = 0.15u
+  Reason: With compiler optimization, the overhead of global flags is minimized, but slight inefficiencies remain due to conditional checks.
+
+- exception vs. returntype:
+  Difference: 5.92u - 3.62u = 2.30u
+  Reason: Optimizations reduce the overhead of `std::variant`, but its inherent complexity (e.g., dynamic type handling) still results in slower performance compared to exceptions.
+
+- exception vs. returntypec:
+  Difference: 3.86u - 3.62u = 0.24u
+  Reason: Compiler optimizations improve tagged union handling, but manual type tagging/unpacking adds slight overhead.
+
+------------------------------------------------------------
+
+(c)
+
+------------------------------------------------------------
+i. Timing Results with Compiler Optimization (-O2):
+------------------------------------------------------------
+Arguments Passed: 100000000 <eperiod> 1003
+
+eperiod: 500
+1. exception:     4.11u 0.00s 0:04.11
+2. returnglobal:  3.74u 0.00s 0:03.75
+3. returntype:    5.94u 0.00s 0:05.94
+4. returntypec:   3.87u 0.00s 0:03.87
+
+eperiod: 50
+5. exception:     8.62u 0.00s 0:08.63
+6. returnglobal:  3.74u 0.00s 0:03.75
+7. returntype:    5.78u 0.00s 0:05.79
+8. returntypec:   3.86u 0.00s 0:03.86
+
+eperiod: 25
+9. exception:    13.63u 0.00s 0:13.64
+10. returnglobal: 3.74u 0.00s 0:03.74
+11. returntype:   5.63u 0.00s 0:05.63
+12. returntypec:  3.85u 0.00s 0:03.85
+
+eperiod: 12
+13. exception:   23.22u 0.00s 0:23.23
+14. returnglobal: 3.75u 0.00s 0:03.75
+15. returntype:   5.33u 0.00s 0:05.33
+16. returntypec:  3.81u 0.00s 0:03.81
+
+------------------------------------------------------------
+ii. Performance Analysis as eperiod Decreases:
+
+1. exception vs. returnglobal:
+   - For higher exception periods (e.g., eperiod=500), `exception` is slightly slower than `returnglobal`:
+     - Difference: 4.11u - 3.74u = 0.37u
+   - As the exception period decreases (e.g., eperiod=12), `exception` becomes significantly slower:
+     - Difference: 23.22u - 3.75u = 19.47u
+   - Reason:
+     - `exception` suffers a heavy performance penalty as the frequency of exceptions increases due to the overhead of stack unwinding and handling.
+     - `returnglobal` uses global flags, which add negligible overhead.
+
+2. exception vs. returntype:
+   - For higher exception periods (e.g., eperiod=500), `exception` is faster than `returntype`:
+     - Difference: 5.94u - 4.11u = 1.83u
+   - As the exception period decreases (e.g., eperiod=12), `returntype` outperforms `exception`:
+     - Difference: 23.22u - 5.33u = 17.89u
+   - Reason:
+     - `std::variant` in `returntype` introduces fixed overhead for each function call.
+
+3. exception vs. returntypec:
+   - For all exception periods, `returntypec` is consistently faster than `exception`:
+     - At eperiod=500: 4.11u - 3.87u = 0.24u
+     - At eperiod=12: 23.22u - 3.81u = 19.41u
+   - Reason:
+     - `returntypec` uses a tagged union, which has low fixed overhead.
+     - The simplicity of the C-style implementation ensures that performance remains steady even as exception frequency increases.
+
+------------------------------------------------------------
