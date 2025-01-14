@@ -2,7 +2,7 @@ OUTPUT = OUTPUT
 GVERSION = -12
 CXX = u++				# uC++ compiler
 #CXX = /u/cs343/cfa-cc/bin/cfa		# CFA compiler
-CXXFLAGS = -g -Wall -Wextra -MMD -Wno-implicit-fallthrough -D${OUTPUT} # compiler flags
+CXXFLAGS = -g -Wall -Wextra -MMD -Wno-implicit-fallthrough -D${OUTPUT} -O2 # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}# makefile name
 
 .SUFFIXES : .cfa			# CFA default rules
@@ -36,7 +36,7 @@ EXECS = ${EXEC1} ${EXEC2} ${EXEC3} ${EXEC4} ${EXEC5}
 
 #############################################################
 
-.PHONY : all clean
+.PHONY : all clean submit
 
 all : ${EXECS}				# build all executables
 
@@ -78,3 +78,6 @@ ${OBJECTS} : ${MAKEFILE_NAME}		# OPTIONAL : changes to this file => recompile
 
 clean :					# remove files that can be regenerated
 	rm -f *.d *.o ${EXEC01} ${EXEC02} ${EXECS}
+
+submit:
+	submit cs343 1 .
