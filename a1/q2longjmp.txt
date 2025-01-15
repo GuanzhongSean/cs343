@@ -1,0 +1,40 @@
+------------------------------------------------------------
+
+(b)
+
+------------------------------------------------------------
+i. Reason of Different Output:
+------------------------------------------------------------
+The `dtors` count of `throwcatch` differs from that of `longjmp`. The mismatch in destructor counts occurs because throw-catch unwinds the stack and calls destructors for local objects, while longjmp skips this process entirely.
+
+------------------------------------------------------------
+ii. Timing Results:
+------------------------------------------------------------
+Arguments Passed: 12 12 103 28
+
+Unoptimized Executables:
+1. throwcatch:  7.26u 0.00s 0:07.26
+2. longjmp:     1.40u 0.00s 0:01.41
+
+Optimized Executables (-O2):
+1. throwcatch:  7.16u 0.00s 0:07.17
+2. longjmp:     1.39u 0.00s 0:01.39
+
+------------------------------------------------------------
+iii. Performance Difference (Without Optimization):
+------------------------------------------------------------
+The transformed program is significantly faster (~5x faster for the transformed program).
+Reason for the Difference:
+  - The `throw-catch` mechanism in C++ involves stack unwinding, which calls destructors and processes each frame of the call stack. This incurs significant overhead.
+  - In contrast, `longjmp` directly restores the saved execution context without any stack unwinding, leading to much faster exception handling.
+
+------------------------------------------------------------
+iv. Performance Difference (With Optimization -O2):
+------------------------------------------------------------
+The transformed program remains significantly faster (~5x faster for the transformed program).
+Reason for the Difference:
+  - Compiler optimization improves both programs but does not eliminate the fundamental overhead of stack unwinding in `throw-catch`.
+  - Optimizations such as inlining and reduced function calls have a limited impact on the exception-handling mechanism.
+  - The transformed program benefits from the inherently low overhead of `longjmp`, which remains unaffected by stack-unwinding operations.
+
+------------------------------------------------------------

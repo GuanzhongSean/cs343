@@ -2,7 +2,7 @@ OUTPUT = OUTPUT
 GVERSION = -12
 CXX = u++				# uC++ compiler
 #CXX = /u/cs343/cfa-cc/bin/cfa		# CFA compiler
-CXXFLAGS = -g -Wall -Wextra -MMD -Wno-implicit-fallthrough -D${OUTPUT} # -O2 # compiler flags
+CXXFLAGS = -g -Wall -Wextra -MMD -Wno-implicit-fallthrough -Wno-unused-variable -D${OUTPUT} # -O2 # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}# makefile name
 
 .SUFFIXES : .cfa			# CFA default rules
