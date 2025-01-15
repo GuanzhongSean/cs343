@@ -10,6 +10,10 @@ bool ex1_flag = false;
 bool ex2_flag = false;
 bool ex3_flag = false;
 
+short int ex1_code;
+int ex2_code;
+long int ex3_code;
+
 intmax_t eperiod = 10000;
 int randcnt = 0;
 int Rand() {
@@ -17,14 +21,10 @@ int Rand() {
 	return rand();
 }
 
-short int ex1_code;
-int ex2_code;
-long int ex3_code;
-
 double rtn1(double i) {
 	if (Rand() % eperiod == 0) {
 		ex1_flag = true;
-		ex1_code = (short int)Rand();
+		ex1_code = static_cast<short int>(Rand());
 		return 0.0;
 	}
 	return i + Rand();
@@ -44,7 +44,7 @@ double rtn2(double i) {
 double rtn3(double i) {
 	if (Rand() % eperiod == 0) {
 		ex3_flag = true;
-		ex3_code = Rand();
+		ex3_code = static_cast<long int>(Rand());
 		return 0.0;
 	}
 	double result = rtn2(i);

@@ -7,15 +7,9 @@
 
 using namespace std;
 
-struct Ex1 {
-	short int code;
-};
-struct Ex2 {
-	int code;
-};
-struct Ex3 {
-	long int code;
-};
+struct Ex1 { short int code; };
+struct Ex2 { int code; };
+struct Ex3 { long int code; };
 
 using Result = variant<double, Ex1, Ex2, Ex3>;
 

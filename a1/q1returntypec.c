@@ -1,3 +1,5 @@
+#include <errno.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +20,7 @@ typedef struct {
 
 intmax_t eperiod = 10000;
 int randcnt = 0;
+bool cmd_error = false;
 int Rand() {
 	randcnt += 1;
 	return rand();
@@ -54,38 +57,48 @@ Result rtn3(double i) {
 	return result;
 }
 
+static intmax_t convert(const char *str) {	// convert C string to integer
+	char *endptr;
+	errno = 0;
+	cmd_error = false;						   // reset
+	intmax_t val = strtoll(str, &endptr, 10);  // attempt conversion
+	if (errno == ERANGE) cmd_error = true;
+	if (endptr == str ||  // conversion failed, no characters generated
+		*endptr != '\0')
+		cmd_error = true;  // not at end of str ?
+	return val;
+}  // convert
+
 int main(int argc, char *argv[]) {
 	intmax_t times = 100000000, seed = getpid();
-	int arg_error = 0;
 
-	// Multi-level exit for command-line argument parsing
-	do {
-		if (argc > 1) {
-			times = strtoll(argv[1], NULL, 10);
-			if (times <= 0) {
-				arg_error = 1;
-				break;
+	switch (argc) {
+		case 4:
+			if (strcmp(argv[3], "d") != 0) {  // default ?
+				seed = convert(argv[3]);
+				if (seed <= 0 || cmd_error) goto cmd_error;
 			}
-		}
-		if (argc > 2) {
-			eperiod = strtoll(argv[2], NULL, 10);
-			if (eperiod <= 0) {
-				arg_error = 1;
-				break;
+		case 3:
+			if (strcmp(argv[2], "d") != 0) {  // default ?
+				eperiod = convert(argv[2]);
+				if (eperiod <= 0 || cmd_error) goto cmd_error;
 			}
-		}
-		if (argc > 3) {
-			seed = strtoll(argv[3], NULL, 10);
-			if (seed <= 0) {
-				arg_error = 1;
-				break;
+		case 2:
+			if (strcmp(argv[1], "d") != 0) {  // default ?
+				times = convert(argv[1]);
+				if (times <= 0 || cmd_error) goto cmd_error;
 			}
-		}
-	} while (0);
+		case 1:
+			break;	// use all defaults
+		default:
+			goto cmd_error;
+	}  // switch
 
-	if (arg_error) {
+	if (false) {
+	cmd_error:
 		fprintf(stderr,
-				"Usage: %s [times > 0 | d [eperiod > 0 | d [seed > 0 | d]]]\n",
+				"Usage: %s [ times > 0 | d [ eperiod > 0 | d [ seed > 0 | d ] "
+				"] ]\n",
 				argv[0]);
 		exit(EXIT_FAILURE);
 	}
