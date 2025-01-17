@@ -1,10 +1,10 @@
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 (b)
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 i. Timing Results:
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 Arguments Passed: 100000000 10000 1003
 
 Unoptimized Executables:
@@ -19,41 +19,48 @@ Optimized Executables (-O2):
 7. returntype:      5.92u 0.00s 0:05.93
 8. returntypec:     3.86u 0.00s 0:03.86
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 ii. Performance Difference Between Original and Transformed Programs (Unoptimized):
 - exception vs. returnglobal:
   Difference: 4.58u - 4.48u = 0.10u
-  Reason: The global flag mechanism introduces minor overhead compared to the exception-based approach.
+  Reason: The global flag mechanism introduces minor overhead compared to the
+   exception-based approach.
 
 - exception vs. returntype:
   Difference: 19.53u - 4.48u = 15.05u
-  Reason: `std::variant` in the return type incurs significant overhead due to type checking, construction, and destruction for each return value.
+  Reason: `std::variant` in the return type incurs significant overhead due to
+   type checking, construction, and destruction for each return value.
 
 - exception vs. returntypec:
   Difference: 4.65u - 4.48u = 0.17u
-  Reason: The tagged union approach in C is efficient but slightly slower due to manual handling of type tags and union unpacking.
+  Reason: The tagged union approach in C is efficient but slightly slower due
+   to manual handling of type tags and union unpacking.
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 iii. Performance Difference Between Original and Transformed Programs (Optimized):
 - exception vs. returnglobal:
   Difference: 3.77u - 3.62u = 0.15u
-  Reason: With compiler optimization, the overhead of global flags is minimized, but slight inefficiencies remain due to conditional checks.
+  Reason: With compiler optimization, the overhead of global flags is minimized,
+   but slight inefficiencies remain due to conditional checks.
 
 - exception vs. returntype:
   Difference: 5.92u - 3.62u = 2.30u
-  Reason: Optimizations reduce the overhead of `std::variant`, but its inherent complexity (e.g., dynamic type handling) still results in slower performance compared to exceptions.
+  Reason: Optimizations reduce the overhead of `std::variant`, but its inherent
+   complexity (e.g., dynamic type handling) still results in slower performance
+   compared to exceptions.
 
 - exception vs. returntypec:
   Difference: 3.86u - 3.62u = 0.24u
-  Reason: Compiler optimizations improve tagged union handling, but manual type tagging/unpacking adds slight overhead.
+  Reason: Compiler optimizations improve tagged union handling, but manual type
+   tagging/unpacking adds slight overhead.
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 (c)
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 i. Timing Results with Compiler Optimization (-O2):
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 Arguments Passed: 100000000 <eperiod> 1003
 
 eperiod: 500
@@ -80,22 +87,27 @@ eperiod: 12
 15. returntype:   5.33u 0.00s 0:05.33
 16. returntypec:  3.81u 0.00s 0:03.81
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 ii. Performance Analysis as eperiod Decreases:
 
 1. exception vs. returnglobal:
-   - For higher exception periods (e.g., eperiod=500), `exception` is slightly slower than `returnglobal`:
+   - For higher exception periods (e.g., eperiod=500), `exception` is slightly
+    slower than `returnglobal`:
      - Difference: 4.11u - 3.74u = 0.37u
-   - As the exception period decreases (e.g., eperiod=12), `exception` becomes significantly slower:
+   - As the exception period decreases (e.g., eperiod=12), `exception` becomes
+    significantly slower:
      - Difference: 23.22u - 3.75u = 19.47u
    - Reason:
-     - `exception` suffers a heavy performance penalty as the frequency of exceptions increases due to the overhead of stack unwinding and handling.
+     - `exception` suffers a heavy performance penalty as the frequency of exceptions
+      increases due to the overhead of stack unwinding and handling.
      - `returnglobal` uses global flags, which add negligible overhead.
 
 2. exception vs. returntype:
-   - For higher exception periods (e.g., eperiod=500), `exception` is faster than `returntype`:
+   - For higher exception periods (e.g., eperiod=500), `exception` is faster than
+    `returntype`:
      - Difference: 5.94u - 4.11u = 1.83u
-   - As the exception period decreases (e.g., eperiod=12), `returntype` outperforms `exception`:
+   - As the exception period decreases (e.g., eperiod=12), `returntype` outperforms
+    `exception`:
      - Difference: 23.22u - 5.33u = 17.89u
    - Reason:
      - `std::variant` in `returntype` introduces fixed overhead for each function call.
@@ -106,6 +118,7 @@ ii. Performance Analysis as eperiod Decreases:
      - At eperiod=12: 23.22u - 3.81u = 19.41u
    - Reason:
      - `returntypec` uses a tagged union, which has low fixed overhead.
-     - The simplicity of the C-style implementation ensures that performance remains steady even as exception frequency increases.
+     - The simplicity of the C-style implementation ensures that performance remains
+      steady even as exception frequency increases.
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
