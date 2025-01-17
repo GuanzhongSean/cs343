@@ -94,15 +94,6 @@ int main(int argc, char *argv[]) {
 			goto cmd_error;
 	}  // switch
 
-	if (false) {
-	cmd_error:
-		fprintf(stderr,
-				"Usage: %s [ times > 0 | d [ eperiod > 0 | d [ seed > 0 | d ] "
-				"] ]\n",
-				argv[0]);
-		exit(EXIT_FAILURE);
-	}
-
 	srand(seed);
 
 	double rv = 0.0;
@@ -136,4 +127,11 @@ int main(int argc, char *argv[]) {
 	printf("calls %d exceptions %d %d %d\n", rc, ec1, ec2, ec3);
 
 	return 0;
+
+cmd_error:
+	fprintf(stderr,
+			"Usage: %s [ times > 0 | d [ eperiod > 0 | d [ seed > 0 | d ] "
+			"] ]\n",
+			argv[0]);
+	exit(EXIT_FAILURE);
 }
