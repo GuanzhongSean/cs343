@@ -1,7 +1,7 @@
 OUTPUT = OUTPUT
 GVERSION = -12
-CXX = u++				# uC++ compiler
-#CXX = /u/cs343/cfa-cc/bin/cfa		# CFA compiler
+CXX = u++ # uC++ compiler
+#CXX = /u/cs343/cfa-cc/bin/cfa # CFA compiler
 CXXFLAGS = -g -Wall -Wextra -MMD -Wno-implicit-fallthrough -Wno-unused-variable -D${OUTPUT} # -O2 # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}# makefile name
 
@@ -27,7 +27,7 @@ EXEC02 = throwcatch			# given executable name
 OBJECTS4 = q2longjmp.o			# 4th executable object files
 EXEC4 = longjmp				# 4th executable name
 
-OBJECTS5 = q3.o # object files forming 5th executable with prefix "q3"
+OBJECTS5 = q3floatconstanthex.o q3main.o # object files forming 5th executable with prefix "q3"
 EXEC5 = floatconstanthex		# 5th executable name
 
 OBJECTS = ${OBJECTS1} ${OBJECTS2} ${OBJECTS3} ${OBJECTS4} ${OBJECTS5}
