@@ -16,6 +16,10 @@ _Coroutine FloatConstantHex {
 	}
 };
 
+int main() {
+	return 0;
+}
+
 /*
 Test data
 
