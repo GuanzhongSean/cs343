@@ -1,3 +1,4 @@
+Input:
 0x1234567890123456.p0
 0xff.p-2
 0x12E.5p0
@@ -15,6 +16,7 @@
 0xF.fp10l
 0x1.0p0L
 0xC.8P4
+0x1.8p3fF
 
 a
 +.
@@ -37,3 +39,47 @@ X00.5p0
 0xG.1p3
 1.0p0
 0E1.8p
+0x1231704129345789012795p1
+
+Output:
+"0x1234567890123456.p0" : "0x1234567890123456.p0" yes, value 1.311768467284833e+18
+"0xff.p-2" : "0xff.p-2" yes, value 63.75
+"0x12E.5p0" : "0x12E.5p0" yes, value 302.3125
+"0Xe2e.p0" : "0Xe2e.p0" yes, value 3630
+"0X00.5p0" : "0X00.5p0" yes, value 0.3125
+"0X.1P+123" : "0X.1P+123" yes, value 6.646139978924579e+35
+"0X12.5p0F" : "0X12.5p0F" yes, value 18.3125
+"0xfff.fffp-5L" : "0xfff.fffp-5L" yes, value 127.9999923706055
+"0x.3p2l" : "0x.3p2l" yes, value 0.75
+"0X123149823p-5f" : "0X123149823p-5f" yes, value 152609985.09375
+"0X123149.823p3" : "0X123149.823p3" yes, value 9538124.068359375
+"0X00000.0000p0000" : "0X00000.0000p0000" yes, value 0
+"0x1.8p3f" : "0x1.8p3f" yes, value 12
+"0x0.4p-2F" : "0x0.4p-2F" yes, value 0.0625
+"0xF.fp10l" : "0xF.fp10l" yes, value 16320
+"0x1.0p0L" : "0x1.0p0L" yes, value 1
+"0xC.8P4" : "0xC.8P4" yes, value 200
+"0x1.8p3fF" : "0x1.8p3f" yes, value 12 -- extraneous characters "F"
+"" : Warning! Blank line.
+"a" : "a" no
+"+." : "+" no -- extraneous characters "."
+"X12.0" : "X" no -- extraneous characters "12.0"
+"0x12.0" : "0x12.0" no
+"1.2.0a" : "1" no -- extraneous characters ".2.0a"
+"-12.5F" : "-" no -- extraneous characters "12.5F"
+"asd" : "a" no -- extraneous characters "sd"
+"gh.ff" : "g" no -- extraneous characters "h.ff"
+"0X" : "0X" no
+"0x.12" : "0x.12" no
+"0X123149.823p" : "0X123149.823p" no
+"0123456789.0123456P-0124" : "01" no -- extraneous characters "23456789.0123456P-0124"
+"0xfff.fffp-L" : "0xfff.fffp-L" no
+"X00.5p0" : "X" no -- extraneous characters "00.5p0"
+"0X.p0" : "0X.p" no -- extraneous characters "0"
+"0x12E.5" : "0x12E.5" no
+"0x1.8q3" : "0x1.8q" no -- extraneous characters "3"
+"0x.4P" : "0x.4P" no
+"0xG.1p3" : "0xG" no -- extraneous characters ".1p3"
+"1.0p0" : "1" no -- extraneous characters ".0p0"
+"0E1.8p" : "0E" no -- extraneous characters "1.8p"
+"0x1231704129345789012795p1" : "0x12317041293457890" no -- extraneous characters "12795p1"
