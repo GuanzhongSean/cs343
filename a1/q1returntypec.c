@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +19,6 @@ typedef struct {
 
 intmax_t eperiod = 10000;
 int randcnt = 0;
-bool cmd_error = false;
 int Rand() {
 	randcnt += 1;
 	return rand();
@@ -57,16 +55,21 @@ Result rtn3(double i) {
 	return result;
 }
 
-static intmax_t convert(const char *str) {	// convert C string to integer
+typedef enum { NULLOPT, INT } OptionalType;
+
+typedef struct {
+	OptionalType type;
+	intmax_t value;
+} OptionalInt;
+
+static OptionalInt convert(const char *str) {  // convert C string to integer
 	char *endptr;
-	errno = 0;
-	cmd_error = false;						   // reset
+	errno = 0;								   // reset
 	intmax_t val = strtoll(str, &endptr, 10);  // attempt conversion
-	if (errno == ERANGE) cmd_error = true;
-	if (endptr == str ||  // conversion failed, no characters generated
-		*endptr != '\0')
-		cmd_error = true;  // not at end of str ?
-	return val;
+	if (errno == ERANGE ||	// conversion failed, no characters generated
+		endptr == str || *endptr != '\0')
+		return (OptionalInt){NULLOPT};	// not at end of str ?
+	return (OptionalInt){INT, val};
 }  // convert
 
 int main(int argc, char *argv[]) {
@@ -75,18 +78,21 @@ int main(int argc, char *argv[]) {
 	switch (argc) {
 		case 4:
 			if (strcmp(argv[3], "d") != 0) {  // default ?
-				seed = convert(argv[3]);
-				if (seed <= 0 || cmd_error) goto cmd_error;
+				OptionalInt result = convert(argv[3]);
+				if (result.type == INT) seed = result.value;
+				if (seed <= 0 || result.type == NULLOPT) goto cmd_error;
 			}
 		case 3:
 			if (strcmp(argv[2], "d") != 0) {  // default ?
-				eperiod = convert(argv[2]);
-				if (eperiod <= 0 || cmd_error) goto cmd_error;
+				OptionalInt result = convert(argv[2]);
+				if (result.type == INT) eperiod = result.value;
+				if (eperiod <= 0 || result.type == NULLOPT) goto cmd_error;
 			}
 		case 2:
 			if (strcmp(argv[1], "d") != 0) {  // default ?
-				times = convert(argv[1]);
-				if (times <= 0 || cmd_error) goto cmd_error;
+				OptionalInt result = convert(argv[1]);
+				if (result.type == INT) times = result.value;
+				if (times <= 0 || result.type == NULLOPT) goto cmd_error;
 			}
 		case 1:
 			break;	// use all defaults
