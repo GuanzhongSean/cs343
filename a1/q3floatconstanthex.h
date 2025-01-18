@@ -13,8 +13,7 @@ _Coroutine FloatConstantHex {
 	_Exception Match {
 	   public:
 		double value;
-		Match(double value) : value(value) {
-		}
+		Match(double value) : value(value) {}
 	};
 	_Exception Error{};
 
