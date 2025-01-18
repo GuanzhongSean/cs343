@@ -1,84 +1,91 @@
 #include "q3floatconstanthex.h"
+
 #include <cctype>
 #include <cmath>
 
 void FloatConstantHex::main() {
-    while (true) {
-        buffer += ch; // Accumulate input
-        if (buffer.size() == 1 && (buffer[0] == EOT)) { // End of text
-            if (validate()) {
-                _Resume Match(mantissa * pow(2, exponent));
-            } else {
-                _Resume Error();
-            }
-        }
-        suspend();
-    }
-}
+	if (ch != '0') {
+		_Resume Error() _At resumer();
+		return;
+	}
+	suspend();
 
-bool FloatConstantHex::validate() {
-    size_t pos = 0;
-    if (!parseHexPrefix(buffer, pos)) return false;
-    if (!parseMantissa(buffer, pos)) return false;
-    if (!parseExponent(buffer, pos)) return false;
-    if (pos != buffer.size()) return false; // Extra characters
-    return true;
-}
+	if (ch != 'x' && ch != 'X') {
+		_Resume Error() _At resumer();
+		return;
+	}
+	suspend();
 
-bool FloatConstantHex::parseHexPrefix(const std::string &str, size_t &pos) {
-    if (str.substr(pos, 2) == "0x" || str.substr(pos, 2) == "0X") {
-        pos += 2;
-        return true;
-    }
-    return false;
-}
+	bool hasDigits = false, hasFraction = false;
+	double mantissa = 0, fractionValue = 0, fractionDivisor = 1;
+	while (std::isxdigit(ch) || ch == '.') {
+		if (ch == '.') {
+			if (hasFraction) {
+				_Resume Error() _At resumer();
+				return;
+			}
+			hasFraction = true;
+		} else {
+			if (hasFraction) {
+				fractionDivisor *= 16;
+				fractionValue += hexDigitToValue(ch) / fractionDivisor;
+			} else {
+				mantissa = mantissa * 16 + hexDigitToValue(ch);
+			}
+			hasDigits = true;
+		}
+		suspend();
+	}
+	if (!hasDigits) {
+		_Resume Error() _At resumer();
+		return;
+	}
 
-bool FloatConstantHex::parseMantissa(const std::string &str, size_t &pos) {
-    size_t start = pos;
-    while (pos < str.size() && std::isxdigit(str[pos])) {
-        mantissa = mantissa * 16 + hexDigitToValue(str[pos]);
-        pos++;
-        mantissaDigits++;
-        if (mantissaDigits > 16) return false;
-    }
-    if (pos < str.size() && str[pos] == '.') {
-        pos++;
-        hasFraction = true;
-        while (pos < str.size() && std::isxdigit(str[pos])) {
-            mantissa += hexDigitToValue(str[pos]) / pow(16, mantissaDigits++);
-            pos++;
-        }
-    }
-    return pos > start; // At least one digit
-}
+	int exponent = 0;
+	if (ch != 'p' && ch != 'P') {
+		_Resume Error() _At resumer();
+		return;
+	}
+	suspend();
 
-bool FloatConstantHex::parseExponent(const std::string &str, size_t &pos) {
-    if (pos < str.size() && (str[pos] == 'p' || str[pos] == 'P')) {
-        pos++;
-        bool isNegative = false;
-        if (str[pos] == '+' || str[pos] == '-') {
-            isNegative = (str[pos] == '-');
-            pos++;
-        }
-        while (pos < str.size() && std::isdigit(str[pos])) {
-            exponent = exponent * 10 + (str[pos] - '0');
-            pos++;
-            exponentDigits++;
-            if (exponentDigits > 3) return false;
-        }
-        if (isNegative) exponent = -exponent;
-        return true;
-    }
-    return false;
+	bool isNegativeExponent = false;
+	if (ch == '+' || ch == '-') {
+		isNegativeExponent = (ch == '-');
+		suspend();
+	}
+
+	if (!std::isdigit(ch)) {
+		_Resume Error() _At resumer();
+		return;
+	}
+	while (std::isdigit(ch)) {
+		exponent = exponent * 10 + (ch - '0');
+		suspend();
+	}
+	if (isNegativeExponent) {
+		exponent = -exponent;
+	}
+
+	if (ch != 'f' && ch != 'l' && ch != 'F' && ch != 'L' && ch != EOT) {
+		_Resume Error() _At resumer();
+		return;
+	} else {
+		if (ch != EOT) {
+			suspend();
+		}
+		if (ch == EOT) {
+			double result = (mantissa + fractionValue) * std::pow(2, exponent);
+			_Resume Match(result) _At resumer();
+			return;
+		}
+	}
+
+	_Resume Error() _At resumer();
+	return;
 }
 
 int FloatConstantHex::hexDigitToValue(char c) {
-    if (std::isdigit(c)) return c - '0';
-    if (std::isxdigit(c)) return std::tolower(c) - 'a' + 10;
-    return -1;
-}
-
-void FloatConstantHex::next(char c) {
-    ch = c;
-    resume(); // Activate coroutine
+	if (std::isdigit(c)) return c - '0';
+	if (std::isxdigit(c)) return std::tolower(c) - 'a' + 10;
+	return -1;
 }
