@@ -32,16 +32,17 @@ void FloatConstantHex::main() {
 			hasFraction = true;
 		} else {
 			if (hasFraction) {
+				mantissaDigitNum++;
 				fractionDivisor *= 16;
 				fractionValue += hexDigitToValue(ch) / fractionDivisor;
 			} else {
 				if (mantissaDigitNum > 0 || ch != '0') {
 					mantissaDigitNum++;
-					if (mantissaDigitNum > 16) {  // Too much digits
-						raise_error();
-					}
 				}
 				integral = integral * 16 + hexDigitToValue(ch);
+			}
+			if (mantissaDigitNum > 16) {  // Too much digits
+				raise_error();
 			}
 			hasDigits = true;
 		}
