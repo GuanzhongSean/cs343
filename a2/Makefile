@@ -25,7 +25,7 @@ endif
 
 #############################################################
 
-.PHONY : all clean
+.PHONY : all clean submit
 .ONESHELL :
 
 all : ${EXECS}					# build all executables
@@ -43,4 +43,7 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -f ${DEPENDS} ${OBJECTS} ${EXECS}
+	rm -f ${DEPENDS} ${OBJECTS} ${EXECS} test_results/
+
+submit:
+	submit cs343 2 .

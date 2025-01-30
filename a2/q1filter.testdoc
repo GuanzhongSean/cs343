@@ -1,0 +1,111 @@
+input:
+   a/bc  
+def 
+  h  ij
+kl  ;mn
+
+    opqr        st12   32
+
+
+uvw  
+123xyz;
+
+<EOF>
+
+Filter list: -h
+Output:
+2020 2061   2f62 6320   200a 6465   6620 0a20
+2068 2020   696a 0a6b   6c20 203b   6d6e 0a0a
+2020 2020   6f70 7172   2020 2020   2020 2020
+7374 3132   2020 2033   320a 0a0a   7576 7720
+200a 3132   3378 797a   3b0a212 characters
+
+Filter list: -w
+Output:
+a/bc
+def
+h ij
+kl ;mn
+opqr st12 32
+uvw
+123xyz;
+46 characters
+
+Filter list: -h -w
+Output:
+2020 2061 2f62 6320 200a 6465 6620 0a20
+2068 2020 696a 0a6b 6c20 203b 6d6e 0a0a
+2020 2020 6f70 7172 2020 2020 2020 2020
+7374 3132 2020 2033 320a 0a0a 7576 7720
+200a 3132 3378 797a 3b0a184 characters
+
+Filter list: -w -h
+Output:
+612f 6263   0a64 6566   0a68 2069   6a0a 6b6c
+203b 6d6e   0a6f 7071   7220 7374   3132 2033
+320a 7576   770a 3132   3378 797a   3b0a132 characters
+
+Filter list: -h -h
+Output:
+3230 3230   2032 3036   3120 2020   3266 3632
+2036 3332   3020 2020   3230 3061   2036 3436
+3520 2020   3636 3230   2030 6132   300a 3230
+3638 2032   3032 3020   2020 3639   3661 2030
+6136 6220   2020 3663   3230 2032   3033 6220
+2020 3664   3665 2030   6130 610a   3230 3230
+2032 3032   3020 2020   3666 3730   2037 3137
+3220 2020   3230 3230   2032 3032   3020 2020
+3230 3230   2032 3032   300a 3733   3734 2033
+3133 3220   2020 3230   3230 2032   3033 3320
+2020 3332   3061 2030   6130 6120   2020 3735
+3736 2037   3732 300a   3230 3061   2033 3133
+3220 2020   3333 3738   2037 3937   6120 2020
+3362 3061607 characters
+
+Filter list: -c
+Output:
+   b/cd  
+efg 
+  i  jk
+lm  ;no
+
+    pqrs        tu12   32
+
+
+vwx  
+123yza;
+74 characters
+
+Filter list: -c3
+Output:
+   d/ef  
+ghi 
+  k  lm
+no  ;pq
+
+    rstu        vw12   32
+
+
+xyz  
+123abc;
+74 characters
+
+Filter list: -c26
+Output:
+   a/bc  
+def 
+  h  ij
+kl  ;mn
+
+    opqr        st12   32
+
+
+uvw  
+123xyz;
+74 characters
+
+Filter list: -w -c -h
+Output:
+622f 6364   0a65 6667   0a69 206a   6b0a 6c6d
+203b 6e6f   0a70 7172   7320 7475   3132 2033
+320a 7677   780a 3132   3379 7a61   3b0a132 characters

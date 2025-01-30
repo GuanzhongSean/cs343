@@ -1,3 +1,5 @@
 filter
 cardgame
 test_results/
+*.out
+*.expect
