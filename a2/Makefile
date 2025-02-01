@@ -7,7 +7,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 OBJECTS1 = q1main.o q1filter.o q1reader.o q1writer.o
 EXEC1 = filter
 
-OBJECTS2 = # object files forming 2nd executable with prefix "q2"
+OBJECTS2 = q2cardgame.o q2player.o
 EXEC2 = cardgame
 
 OBJECTS = ${OBJECTS1} ${OBJECTS2}		# all object files
@@ -43,7 +43,7 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -f ${DEPENDS} ${OBJECTS} ${EXECS} test_results/
+	rm -rf ${DEPENDS} ${OBJECTS} ${EXECS} test_results/
 
 submit:
 	submit cs343 2 .
