@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <vector>
 
 #include "q1filter.h"
 #include "q1reader.h"
@@ -10,54 +9,57 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	// Parse command-line arguments
-	vector<string> filterOptions;
-	string inputFile, outputFile;
-
-	// Assume filter options come before file names
-	int i = 1;
-	for (; i < argc && argv[i][0] == '-'; i++) {
-		filterOptions.push_back(argv[i]);
+	int i = 1, filterIndex = -1, inputIndex = -1, outputIndex = -1;
+	while (i < argc) {
+		if (argv[i][0] != '-') {
+			break;
+		}
+		i++;
 	}
-
+	filterIndex = i - 1;
 	if (i < argc) {
-		inputFile = argv[i++];
+		inputIndex = i;
+		i++;
 	}
 	if (i < argc) {
-		outputFile = argv[i++];
+		outputIndex = i;
+		i++;
 	}
 
 	// Open input and output streams
 	istream *in = &cin;
-	if (!inputFile.empty()) {
-		in = new ifstream(inputFile.c_str());
+	if (inputIndex != -1) {
+		in = new ifstream(argv[inputIndex]);
 		if (!*in) {
-			cerr << "Error: Cannot open input file " << inputFile << endl;
+			cerr << "Error: Cannot open input file " << argv[inputIndex]
+				 << endl;
 			return 1;
 		}
 	}
 
 	ostream *out = &cout;
-	if (!outputFile.empty()) {
-		out = new ofstream(outputFile.c_str());
+	if (outputIndex != -1) {
+		out = new ofstream(argv[outputIndex]);
 		if (!*out) {
-			cerr << "Error: Cannot open output file " << outputFile << endl;
+			cerr << "Error: Cannot open output file " << argv[outputIndex]
+				 << endl;
 			return 1;
 		}
 	}
 
 	// Create the pipeline in reverse order
 	Filter *currentFilter = new Writer(*out);
-	for (auto it = filterOptions.rbegin(); it != filterOptions.rend(); it++) {
-		if (*it == "-h") {
+	for (int i = filterIndex; i >= 1; i--) {
+		string arg = argv[i];
+		if (arg == "-h") {
 			currentFilter = new HexFilter(currentFilter);
-		} else if (*it == "-w") {
+		} else if (arg == "-w") {
 			currentFilter = new WhitespaceFilter(currentFilter);
-		} else if (it->find("-c") == 0) {
+		} else if (arg.find("-c") == 0) {
 			enum { DefaultShift = 1 };
 			int shift = DefaultShift;
-			if (it->length() > 2) {
-				string shift_arg = it->substr(2);
+			if (arg.length() > 2) {
+				string shift_arg = arg.substr(2);
 				try {
 					shift = convert(shift_arg.c_str());
 				} catch (invalid_argument &) {
@@ -66,8 +68,11 @@ int main(int argc, char *argv[]) {
 			}
 			currentFilter = new CaesarCipherFilter(currentFilter, shift);
 		} else {
-			cerr << "Error: Unknown filter option " << *it << endl;
-			return 1;
+			cerr << "Error: invalid command-line option \"" << arg << "\"."
+				 << endl
+				 << "Assume all filter options are correctly specified."
+				 << endl;
+			exit(1);
 		}
 	}
 
