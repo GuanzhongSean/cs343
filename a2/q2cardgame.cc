@@ -77,18 +77,13 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (int g = 0; g < games; g++) {
-		// if (g ==1) {
-		// 	for (int i = 0; i < 10; i++) {
-		// 		cout << prng(1, 8) << " ";
-		// 	}
-		// }
 		if (g != 0) {
 			cout << endl << endl;
 		}
-		if (argc <= 2) {
+		if (argc <= 2 || strcmp(argv[2], "d") == 0) {
 			players = prng2(2, 10);
 		}
-		if (argc <= 3) {
+		if (argc <= 3 || strcmp(argv[3], "d") == 0) {
 			cards = prng2(10, 200);
 		}
 		Player::players(players);

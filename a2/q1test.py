@@ -48,7 +48,7 @@ def compare_outputs(filter_output, sample_output, flags, input_text):
 
 
 # Main testing function
-def test_filter(num_tests=10):
+def test_filter(num_tests):
     for i in range(num_tests):
         # Generate random input and flags
         input_text = generate_random_input()
@@ -75,8 +75,6 @@ def test_filter(num_tests=10):
             print("Filter stderr:", filter_stderr)
         if sample_stderr:
             print("Sample stderr:", sample_stderr)
-
-        print()
 
 
 # Run the tests

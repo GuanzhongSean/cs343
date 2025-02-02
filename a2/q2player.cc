@@ -1,9 +1,5 @@
 #include "q2player.h"
 
-#include <iostream>
-
-using namespace std;
-
 unsigned int Player::players_num;
 
 void Player::players(unsigned int num) {
@@ -43,7 +39,7 @@ void Player::main() {
 	try {
 		while (true) {
 			_Enable;
-			if (!active) {
+			if (!active) { // Check if player is still active
 				if (&resumer() == left) {
 					right->play(deck);
 				} else {
@@ -52,6 +48,7 @@ void Player::main() {
 				continue;
 			}
 
+			// Check if it's the last player
 			if (players_num <= 1) {
 				printer.print(id, deck, players_num);
 				break;
@@ -85,7 +82,7 @@ void Player::main() {
 			}
 		}
 	}
-	_CatchResume((*left).Schmilblick &) {
+	_CatchResume((*left).Schmilblick &) {  // Schmilblick event propagate
 		if (!drinker) {
 			if (active) printer.print(id);
 			_Resume Schmilblick() _At *right;
@@ -94,7 +91,7 @@ void Player::main() {
 			drinker = false;
 		}
 	}
-	_CatchResume((*this).Schmilblick &) {
+	_CatchResume((*this).Schmilblick &) {  // Schmilblick event start
 		drinker = true;
 		printer.print(id);
 		_Resume Schmilblick() _At *right;
