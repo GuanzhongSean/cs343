@@ -1,9 +1,17 @@
-#include <iostream>
-
 #include "q2player.h"
 
+#include <iostream>
+
+using namespace std;
+
+unsigned int Player::players_num;
+
 void Player::players(unsigned int num) {
-	// Static method to set the number of players
+	players_num = num;
+}
+
+void Player::decrementPlayers() {
+	players_num--;
 }
 
 Player::Player(PRNG &prng, unsigned int id, Printer &printer)
@@ -12,7 +20,8 @@ Player::Player(PRNG &prng, unsigned int id, Printer &printer)
 	  printer(printer),
 	  left(nullptr),
 	  right(nullptr),
-	  active(true) {}
+	  active(true),
+	  drinker(false) {}
 
 void Player::start(Player &lp, Player &rp) {
 	left = &lp;
@@ -30,32 +39,65 @@ void Player::drink() {
 }
 
 void Player::main() {
-    for (;;) {
-        if (!active) break;
+	suspend();
+	try {
+		while (true) {
+			_Enable;
+			if (!active) {
+				if (&resumer() == left) {
+					right->play(deck);
+				} else {
+					left->play(deck);
+				}
+				continue;
+			}
 
-        // Take cards
-        unsigned int take = prng(1, 8);
-        if (take > deck) take = deck;
-        deck -= take;
+			if (players_num <= 1) {
+				printer.print(id, deck, players_num);
+				break;
+			}
 
-        // Check for death deck
-        if (deck % DEATH_DECK_DIVISOR == 0) {
-            active = false;
-            printer.print(id, take, 0); // 0 indicates termination (X)
-        } else {
-            // Pass deck to next player
-            if (deck % 2 == 0) {
-                right->play(deck);
-                printer.print(id, take, deck); // Positive value indicates pass to the right (>)
-            } else {
-                left->play(deck);
-                printer.print(id, take, -deck); // Negative value indicates pass to the left (<)
-            }
-        }
+			// Take cards
+			unsigned int take = prng(1, 8);
+			if (take > deck) take = deck;
+			deck -= take;
+			printer.print(id, take, players_num);
+			if (deck == 0) {
+				break;
+			}
 
-        // Schmilblick event
-        if (prng(10) == 0) {
-            drink();
-        }
-    }
+			// Check for death deck
+			if ((deck + take) % DEATH_DECK_DIVISOR == 0) {
+				active = false;
+				decrementPlayers();
+			}
+
+			// Schmilblick event
+			if (active && prng(10) == 0) {
+				_Resume Schmilblick();
+			}
+
+			// Pass deck to next player
+			if (deck % 2 == 0) {
+				right->play(deck);
+			} else {
+				left->play(deck);
+			}
+		}
+	}
+	_CatchResume((*left).Schmilblick &) {
+		if (!drinker) {
+			if (active) printer.print(id);
+			_Resume Schmilblick() _At *right;
+			right->drink();
+		} else {
+			drinker = false;
+		}
+	}
+	_CatchResume((*this).Schmilblick &) {
+		drinker = true;
+		printer.print(id);
+		_Resume Schmilblick() _At *right;
+		right->drink();
+	}
 }

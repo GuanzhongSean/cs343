@@ -6,12 +6,15 @@
 #include "q2printer.h"
 
 _Coroutine Player {
+	_Exception Schmilblick {};
 	PRNG & prng;
 	unsigned int id;
 	Printer & printer;
 	Player *left, *right;
 	unsigned int deck;
-	bool active;
+	bool active, drinker;
+	static unsigned int players_num;
+	static void decrementPlayers();
 
 	void main();
 
