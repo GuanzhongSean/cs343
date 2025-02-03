@@ -1,0 +1,63 @@
+(a) Performing the experiments:
+
+1. Running the program 10 times with '1000000000 1':
+   - shared:2010676293
+   - shared:2041081125
+   - shared:2041335150
+   - shared:2037745045
+   - shared:2091506203
+   - shared:2039917031
+   - shared:2075488596
+   - shared:2038622474
+   - shared:2078950147
+   - shared:2000000000
+
+2. Running the program 10 times with '1000000000 2':
+   - shared:1802927353
+   - shared:1783934744
+   - shared:1803634184
+   - shared:1754088624
+   - shared:1726441487
+   - shared:1700951428
+   - shared:1718590791
+   - shared:1706901465
+   - shared:1724846705
+   - shared:1733557765
+
+(b) Must all 10 runs for each version produce the same result?
+   No, the results vary in both single-kernel and multi-kernel runs. This variation is primarily due to the use of the `volatile` keyword on the shared variable and the lack of atomicity in the `shared += 1` operations. It involves reading the value of shared, incrementing it, and writing it back. In a multiple-kernel run (2 processor), 2 threads perform this operation simultaneously, the final value of shared can be incorrect. In a single-kernel run (1 processor), variations are caused by CPU optimizations and pipeline execution. The `-O3` flag aggressively optimize the code. This can lead to more interleaving and race conditions.
+
+(c) Theoretical smallest and largest values for `shared` with argument `1000000000`:
+   - The theoretical minimum is 2, here’s a step-by-step breakdown of how it can happen:
+        1. Initial State:
+        - `shared = 0`
+
+        2. Thread 1:
+        - Reads `shared = 0`
+        - Is preempted before writing back the incremented value.
+
+        3. Thread 2:
+        - Runs to the last increment, performing all its iterations.
+        - After 1,000,000,000 iterations, `shared` should be 1,999,999,999.
+        - However, due to the race condition, Thread 1’s earlier read of `shared = 0` is still pending.
+
+        4. Thread 1 Resumes:
+        - Writes back `shared = 0 + 1 = 1`, overwriting Thread 2’s work.
+
+        5. Thread 2 Preempted:
+        - Read the value of `shared = 1` for its last increment.
+
+        6. Thread 1 Resumes:
+        - Continues its iterations, incrementing `shared` from 1 until the end.
+
+        5. Thread 2’s Final Increment:
+        - Writes back `shared = 1 + 1 = 2`.
+
+        6. Final State:
+        - After both threads complete, `shared = 2`
+
+   - The theoretical maximum is 1000000000 × 2 × 2 = 4000000000, assuming no race conditions and proper synchronization.
+
+(d) Subtle difference between 1 processor and 2 processors:
+   - With a single processor, the two tasks are scheduled to run concurrently, but only one task can execute at a time. The operating system's scheduler interleaves the execution of the two tasks, which can still lead to race conditions and lost updates.
+   - With two processors, the two tasks can run truly in parallel, leading to more frequent contention for the shared variable shared. This increases the likelihood of race conditions and lost updates, so the results are closer to the theoretical minimum.
