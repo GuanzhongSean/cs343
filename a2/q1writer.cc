@@ -9,6 +9,6 @@ void Writer::main() {
 			suspend();
 		}
 	} catch (Eof &) {
-		out << count << " characters" << std::endl;
+		out << count << " characters" << endl;
 	}
 }

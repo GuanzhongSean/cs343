@@ -1,11 +1,9 @@
 #include "q1filter.h"
 
 #include <cctype>
-#include <iomanip>
-#include <iostream>
+#include <cstdio>
 
-#include "q1basefilter.h"
-#include "q1util.h"
+#define HEX_DIGITS 2
 
 void HexFilter::main() {
 	enum {
@@ -45,8 +43,8 @@ void HexFilter::main() {
 }
 
 void HexFilter::putHex(bool eol) {
-	char hex[3];
-	charToHex(ch, hex);
+	char hex[HEX_DIGITS + 1];
+	snprintf(hex, HEX_DIGITS + 1, "%02x", ch);
 	next->put(hex[0]);
 	next->put(hex[1]);
 	if (eol) next->put('\n');

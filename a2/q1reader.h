@@ -5,7 +5,7 @@
 
 #include "q1basefilter.h"
 
-using istream = std::istream;
+using std::istream;
 
 _Coroutine Reader : public Filter {
 	istream & in;

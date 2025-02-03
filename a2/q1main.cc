@@ -3,7 +3,6 @@
 
 #include "q1filter.h"
 #include "q1reader.h"
-#include "q1util.h"
 #include "q1writer.h"
 
 using namespace std;

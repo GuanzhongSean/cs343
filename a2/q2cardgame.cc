@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include "q1util.h"
 #include "q2player.h"
 #include "q2printer.h"
 
@@ -22,58 +21,48 @@ void usage(char *argv[]) {
 int main(int argc, char *argv[]) {
 	PRNG prng, prng2;
 	int games = 5, players, cards;
+	struct cmd_error {};
 
 	// Parse command line arguments
-	if (argc > 4) {
-		if (strcmp(argv[4], "d") != 0) {
-			int seed;
-			try {
-				seed = convert(argv[4]);
-			} catch (invalid_argument &) {
-				usage(argv);
-			}
-			if (seed <= 0) {
-				usage(argv);
-			}
-			prng.set_seed(seed);
-			prng2.set_seed(seed);
+	try {
+		switch (argc) {
+			case 5:
+				if (strcmp(argv[4], "d") != 0) {
+					int seed = convert(argv[4]);
+					if (seed <= 0) {
+						throw cmd_error{};
+					}
+					prng.set_seed(seed);
+					prng2.set_seed(seed);
+				}
+			case 4:
+				if (strcmp(argv[3], "d") != 0) {
+					cards = convert(argv[3]);
+					if (cards <= 0) {
+						throw cmd_error{};
+					}
+				}
+			case 3:
+				if (strcmp(argv[2], "d") != 0) {
+					players = convert(argv[2]);
+					if (players < 2 || players > 20) {
+						throw cmd_error{};
+					}
+				}
+			case 2:
+				if (strcmp(argv[1], "d") != 0) {
+					games = convert(argv[1]);
+					if (games < 0) {
+						throw cmd_error{};
+					}
+				}
+			case 1:
+				break;
+			default:
+				throw cmd_error{};
 		}
-	}
-	if (argc > 3) {
-		if (strcmp(argv[3], "d") != 0) {
-			try {
-				cards = convert(argv[3]);
-			} catch (invalid_argument &) {
-				usage(argv);
-			}
-			if (cards <= 0) {
-				usage(argv);
-			}
-		}
-	}
-	if (argc > 2) {
-		if (strcmp(argv[2], "d") != 0) {
-			try {
-				players = convert(argv[2]);
-			} catch (invalid_argument &) {
-				usage(argv);
-			}
-			if (players < 2 || players > 20) {
-				usage(argv);
-			}
-		}
-	}
-	if (argc > 1) {
-		if (strcmp(argv[1], "d") != 0) {
-			try {
-				games = convert(argv[1]);
-			} catch (invalid_argument &) {
-				usage(argv);
-			}
-			if (games < 0) {
-				usage(argv);
-			}
-		}
+	} catch (...) {
+		usage(argv);
 	}
 
 	for (int g = 0; g < games; g++) {

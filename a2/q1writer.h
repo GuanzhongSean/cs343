@@ -5,7 +5,8 @@
 
 #include "q1basefilter.h"
 
-using ostream = std::ostream;
+using std::endl;
+using std::ostream;
 
 _Coroutine Writer : public Filter {
 	ostream & out;
