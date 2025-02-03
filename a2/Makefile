@@ -17,6 +17,7 @@ EXEC3 = q3
 OBJECTS = ${OBJECTS1} ${OBJECTS2}		# all object files
 EXECS = ${EXEC1} ${EXEC2}			# all executables
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
+DEPENDS += ${OBJECTS3:.o=.d}
 
 ifeq (${CXX},cfa)
 # strip removes whitespace between value and comment
