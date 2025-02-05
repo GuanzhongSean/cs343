@@ -54,7 +54,7 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -rf ${DEPENDS} ${OBJECTS} ${OBJECTS3} ${EXECS} ${EXEC3} test_results/
+	rm -rf ${DEPENDS} ${OBJECTS} ${OBJECTS3} ${EXECS} ${EXEC3} test_results/ *.out *.expect
 
 submit:
 	submit cs343 2 .

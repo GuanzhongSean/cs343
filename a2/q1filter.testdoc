@@ -1,4 +1,4 @@
-input:
+Input:
    a/bc  
 def 
   h  ij
@@ -109,3 +109,30 @@ Output:
 622f 6364   0a65 6667   0a69 206a   6b0a 6c6d
 203b 6e6f   0a70 7172   7320 7475   3132 2033
 320a 7677   780a 3132   3379 7a61   3b0a132 characters
+
+Input file:
+/dev/null
+
+Output:
+0 characters
+
+Input file:
+unreadable file or nonexistent input file named "a"
+
+Output:
+Error! Could not open input file "a"
+Usage: ./filter [ -filter-options ... ] [ infile [outfile] ]
+
+Invalid arguments:
+-a
+
+Output:
+Error: invalid command-line option "-a".
+Assume all filter options are correctly specified.
+
+Output file (bad permission):
+/etc/out
+
+Output:
+Error! Could not open input file "/etc/out"
+Usage: ./filter [ -filter-options ... ] [ infile [outfile] ]
