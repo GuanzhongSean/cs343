@@ -1,3 +1,4 @@
+#include <cstring>
 #include <fstream>
 #include <iostream>
 
@@ -7,14 +8,17 @@
 
 using namespace std;
 
+void usage(char *argv[]) {
+	cerr << "Usage: " << argv[0] << " [ -filter-options ... ] [ infile [outfile] ]"
+		 << endl;
+	exit(1);
+}
+
 int main(int argc, char *argv[]) {
-	int i = 1, filterIndex = -1, inputIndex = -1, outputIndex = -1;
-	while (i < argc) {
-		if (argv[i][0] != '-') {
-			break;
-		}
-		i++;
-	}
+	int i, filterIndex, inputIndex = -1, outputIndex = -1;
+	struct cmd_error {};
+
+	for (i = 1; i < argc && argv[i][0] == '-'; i++) {}
 	filterIndex = i - 1;
 	if (i < argc) {
 		inputIndex = i;
@@ -24,50 +28,54 @@ int main(int argc, char *argv[]) {
 		outputIndex = i;
 		i++;
 	}
+	if (i < argc) {
+		usage(argv);
+	}
 
 	// Open input and output streams
 	istream *in = &cin;
 	if (inputIndex != -1) {
-		in = new ifstream(argv[inputIndex]);
-		if (!*in) {
-			cerr << "Error: Cannot open input file " << argv[inputIndex]
+		try {
+			in = new ifstream(argv[inputIndex]);
+		} catch (...) {
+			cerr << "Error! Could not open input file \"" << argv[inputIndex] << "\""
 				 << endl;
-			return 1;
+			usage(argv);
 		}
 	}
 
 	ostream *out = &cout;
 	if (outputIndex != -1) {
-		out = new ofstream(argv[outputIndex]);
-		if (!*out) {
-			cerr << "Error: Cannot open output file " << argv[outputIndex]
+		try {
+			out = new ofstream(argv[outputIndex]);
+		} catch (...) {
+			cerr << "Error! Could not open output file \"" << argv[outputIndex] << "\""
 				 << endl;
-			return 1;
+			usage(argv);
 		}
 	}
 
 	// Create the pipeline in reverse order
 	Filter *currentFilter = new Writer(*out);
 	for (int i = filterIndex; i >= 1; i--) {
-		string arg = argv[i];
-		if (arg == "-h") {
-			currentFilter = new HexFilter(currentFilter);
-		} else if (arg == "-w") {
-			currentFilter = new WhitespaceFilter(currentFilter);
-		} else if (arg.find("-c") == 0) {
-			enum { DefaultShift = 1 };
-			int shift = DefaultShift;
-			if (arg.length() > 2) {
-				string shift_arg = arg.substr(2);
-				try {
-					shift = convert(shift_arg.c_str());
-				} catch (invalid_argument &) {
-					cerr << "Error: Invalid -c[shift] " << shift_arg << endl;
+		try {
+			if (strcmp(argv[i], "-h") == 0) {
+				currentFilter = new HexFilter(currentFilter);
+			} else if (strcmp(argv[i], "-w") == 0) {
+				currentFilter = new WhitespaceFilter(currentFilter);
+			} else if (strlen(argv[i]) > 1 && argv[i][1] == 'c') {
+				enum { DefaultShift = 1 };
+				int shift = DefaultShift;
+				if (strlen(argv[i]) > 2) {
+					const char *shift_arg = argv[i] + 2;
+					shift = convert(shift_arg);
 				}
+				currentFilter = new CaesarCipherFilter(currentFilter, shift);
+			} else {
+				throw cmd_error{};
 			}
-			currentFilter = new CaesarCipherFilter(currentFilter, shift);
-		} else {
-			cerr << "Error: invalid command-line option \"" << arg << "\"."
+		} catch (...) {
+			cerr << "Error: invalid command-line option \"" << argv[i] << "\"."
 				 << endl
 				 << "Assume all filter options are correctly specified."
 				 << endl;
