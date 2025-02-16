@@ -5,7 +5,7 @@ BIMPL := NOBUSY
 BCHECK := NOBARGINGCHECK
 
 CXX = u++					# compiler
-CXXFLAGS = -g -Wall -Wextra -multi ${OPT} -MMD -DSTYPE="${STYPE}" -D"${SIMPL}" \
+CXXFLAGS = -g -Wall -Wextra -multi -MMD ${OPT} -DSTYPE="${STYPE}" -D"${SIMPL}" \
 		-D"${BIMPL}" -D"${BCHECK}"	# compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
@@ -26,7 +26,7 @@ EXECS = ${EXEC1} ${EXEC2}			# all executables
 
 all : ${EXECS}					# build all executables
 
--include MergeImpl
+-include QuickImpl
 
 # same implementation concurrency/type as last time ?
 ifeq (${shell if [ "${IMPLSTYPE}" = "${STYPE}" -a "${IMPLSIMPL}" = "${SIMPL}" ] ; \
@@ -36,13 +36,13 @@ ${EXEC1} : ${OBJECTS1}
 else						# implementation type has changed => rebuilt
 .PHONY : ${EXEC1}
 ${EXEC1} :
-	rm -f MergeImpl
+	rm -f QuickImpl
 	touch q2quicksort.h
 	${MAKE} ${EXEC1} STYPE="${STYPE}" SIMPL="${SIMPL}"
 endif
 
-MergeImpl :
-	echo "IMPLSTYPE=${STYPE}\nIMPLSIMPL=${SIMPL}" > MergeImpl
+QuickImpl :
+	echo "IMPLSTYPE=${STYPE}\nIMPLSIMPL=${SIMPL}" > QuickImpl
 	sleep 1
 
 -include BufImpl
@@ -72,4 +72,4 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -f *.d *.o ${EXECS} MergeImpl BufImpl
+	rm -f *.d *.o ${EXECS} QuickImpl BufImpl
