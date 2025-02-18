@@ -89,8 +89,8 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 
 -include ${DEPENDS}				# include *.d files containing program dependences
 
-clean :						# remove files that can be regenerated
-	rm -f *.d *.o ${EXECS} ${EXEC3} QuickImpl BufImpl
+clean:						# remove files that can be regenerated
+	rm -rf *.d *.o ${EXECS} ${EXEC3} QuickImpl BufImpl test_results/
 
 submit:
 	submit cs343 3 .

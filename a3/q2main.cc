@@ -1,5 +1,6 @@
 #include <uPRNG.h>
 
+#include <climits>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -21,21 +22,41 @@ template <typename T>
 void processLists(istream& input, ostream& output, unsigned int depth) {
 	while (true) {
 		// Read the number of values in the list
-		unsigned int count;
+		int count;
 		input >> count;
-		if (input.fail()) break;
+		if (input.eof()) break;
+		if (input.fail()) {
+			cerr << "Error! Could not read the number of values in the list."
+				 << endl;
+			exit(1);
+		}
+		if (count < 0) {
+			cerr << "Error! The number of values in the list must be "
+					"non-negative: "
+				 << count << endl;
+			exit(1);
+		}
 
 		// Dynamically allocate the array to hold the values
 		T* values = new T[count];
-		for (unsigned int i = 0; i < count; ++i) {
+		for (int i = 0; i < count; i++) {
 			input >> values[i];
+			if (input.fail()) {
+				cerr << "Error! Could not read value " << i + 1
+					 << " in the list." << endl;
+				exit(1);
+			}
 		}
 
 		// Print the original list
-		for (unsigned int i = 0; i < count; ++i) {
-			output << values[i] << " ";
-			if (i % 23 == 22) {
-				output << endl << "  ";
+		for (int i = 0; i < count; i++) {
+			output << values[i];
+			if (i < count - 1) {
+				if (i % 22 == 21) {
+					output << endl << "  ";
+				} else {
+					output << " ";
+				}
 			}
 		}
 		output << endl;
@@ -44,10 +65,14 @@ void processLists(istream& input, ostream& output, unsigned int depth) {
 		if (count > 1) quicksort(values, 0, count - 1, depth);
 
 		// Print the sorted list
-		for (unsigned int i = 0; i < count; ++i) {
-			output << values[i] << " ";
-			if (i % 23 == 22) {
-				output << endl << "  ";
+		for (int i = 0; i < count; i++) {
+			output << values[i];
+			if (i < count - 1) {
+				if (i % 22 == 21) {
+					output << endl << "  ";
+				} else {
+					output << " ";
+				}
 			}
 		}
 		output << endl << endl;
@@ -66,17 +91,23 @@ int main(int argc, char* argv[]) {
 		if (argc > 1 && strcmp(argv[1], "-t") == 0) {
 			// Time mode
 			PRNG prng;
-			int size = convert(argv[2]);
+			intmax_t size = convert(argv[2]);
 			if (size < 0) throw cmd_error();
+			if (size > UINT_MAX) {
+				cerr << "Error! The size of the list larger than the maximum "
+						"of unsigned int: "
+					 << size << " > " << UINT_MAX << endl;
+				exit(1);
+			}
 
-			// Dynamically allocate the array
+			unsigned int usize = static_cast<unsigned int>(size);
 			int* values = new int[size];
-			for (int i = 0; i < size; i++) {
+			for (unsigned int i = 0; i < usize; i++) {
 				values[i] = size - i;
 			}
 
 			// Randomize values
-			unsigned int times = sqrt(size);
+			unsigned int times = sqrt(usize);
 			for (unsigned int counter = 0; counter < times; counter++) {
 				swap(values[0], values[prng(size)]);
 			}
@@ -108,9 +139,6 @@ int main(int argc, char* argv[]) {
 
 			// Call the appropriate template function based on STYPE
 			processLists<STYPE>(*input, *output, depth);
-
-			if (input != &cin) delete input;
-			if (output != &cout) delete output;
 		}
 	} catch (...) {
 		usage(argv);
@@ -120,6 +148,9 @@ int main(int argc, char* argv[]) {
 	if (!nosummary) {
 		malloc_stats();
 	}
+
+	if (input != &cin) delete input;
+	if (output != &cout) delete output;
 
 	return 0;
 }

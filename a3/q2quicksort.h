@@ -13,7 +13,7 @@ template <typename T>
 unsigned int partition(T arr[], unsigned int low, unsigned int high) {
 	T pivot = arr[low + (high - low) / 2];
 	swap(arr[low + (high - low) / 2], arr[high]);
-	int i = low - 1;
+	unsigned int i = low - 1;
 	for (unsigned int j = low; j < high; j++) {
 		if (arr[j] < pivot) {
 			i++;

@@ -1,0 +1,53 @@
+(a) Performance Experiments (Array size = 500000000)
+
+| Version   | Depth | User Time (u) | System Time (s) | Real Time (r) | Memory (kb) | Sort time    |
+| CBEGIN    | 0     | 16.19u        | 1.44s           | 0:17.54       | 1957532kb   | 16.099864790 |
+| CBEGIN    | 1     | 18.30u        | 1.86s           | 0:10.99       | 1957640kb   | 9.492784155  |
+| CBEGIN    | 2     | 18.09u        | 2.12s           | 0:06.64       | 1957664kb   | 5.024442468  |
+| CBEGIN    | 3     | 19.62u        | 1.31s           | 0:04.47       | 1957016kb   | 2.924557056  |
+| CBEGIN    | 4     | 24.12u        | 1.58s           | 0:04.03       | 1957572kb   | 2.530007278  |
+| TASK      | 0     | 15.90u        | 1.59s           | 0:17.40       | 1957544kb   | 15.929008694 |
+| TASK      | 1     | 17.12u        | 2.58s           | 0:10.82       | 1957556kb   | 9.270453576  |
+| TASK      | 2     | 17.21u        | 1.80s           | 0:06.51       | 1957636kb   | 4.884516731  |
+| TASK      | 3     | 18.50u        | 1.34s           | 0:04.39       | 1956928kb   | 2.906384870  |
+| TASK      | 4     | 22.63u        | 1.58s           | 0:03.93       | 1957480kb   | 2.452447519  |
+| ACTOR     | 0     | 16.10u        | 3.56s           | 0:19.56       | 1957588kb   | 18.046040972 |
+| ACTOR     | 1     | 16.53u        | 1.41s           | 0:09.69       | 1957436kb   | 8.190203496  |
+| ACTOR     | 2     | 21.40u        | 2.97s           | 0:07.17       | 1957652kb   | 5.710568185  |
+| ACTOR     | 3     | 22.99u        | 1.33s           | 0:04.36       | 1957888kb   | 2.835791205  |
+| ACTOR     | 4     | 44.83u        | 1.34s           | 0:04.21       | 1958096kb   | 2.784036715  |
+
+(b) Performance Difference with Respect to Scaling
+i. Real-Time Performance
+As the depth increases, the real time decreases significantly for all concurrency models. This indicates that increasing the number of concurrent tasks improves performance by utilizing multiple processors.
+    - For CBEGIN:
+        Depth 0: 17.54s
+        Depth 4: 4.03s
+    - For TASK:
+        Depth 0: 17.40s
+        Depth 4: 3.93s
+    - For ACTOR:
+        Depth 0: 19.56s
+        Depth 4: 4.21s
+The reduction in real time demonstrates good scalability as the number of processors increases. However, the improvement diminishes at higher depths (e.g., depth 4) due to overhead from task creation and synchronization.
+
+ii. User Time
+User time increases with depth because more tasks are executed concurrently, and each task contributes to the total CPU time.
+The ACTOR model shows significantly higher user time at depth 4 (44.83s) compared to CBEGIN (24.12s) and TASK (22.63s). This suggests that the actor model introduces more overhead, possibly due to message-passing and context-switching costs.
+
+iii. Memory Usage
+Memory usage remains relatively constant across all experiments (~1.95 GB). This indicates that memory consumption is not significantly affected by the concurrency model or depth.
+
+Comparison Across Concurrency Models
+    CBEGIN:
+        Shows the best overall performance in terms of both real time and user time.
+        Efficiently utilizes processors with minimal overhead.
+    TASK:
+        Slightly slower than CBEGIN but still performs well.
+        Task creation and management introduce some overhead, but it is manageable.
+    ACTOR:
+        Performs worse than CBEGIN and TASK, especially at higher depths.
+        Higher user time and real time suggest significant overhead from message-passing and actor management.
+
+(c) Speculation on the Performance Difference Between Sort Time and Real Time
+There is a nearly constant difference (~1.5s) between Sort Time and Real Time suggests that this overhead is largely independent of the sorting process itself. This indicates that there are fixed costs associated with setup, memory management, and data movement, which remain consistent across different depths.
