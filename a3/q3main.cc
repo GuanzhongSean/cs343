@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	struct cmd_error {};
 	try {
 		if (argc > 7) throw cmd_error();
-		if (argc > 6 && !strcmp(argv[6], "d")) {
+		if (argc > 6 && strcmp(argv[6], "d") != 0) {
 			processors = convert(argv[6]);
 		}
 		if (argc > 4 && strcmp(argv[4], "d") != 0) {
@@ -69,7 +69,6 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < prods; i++) {
 		delete producers[i];
 	}
-    sleep(1);
 	buffer.poison();
 	for (int i = 0; i < cons; i++) {
 		delete consumers[i];
@@ -80,6 +79,13 @@ int main(int argc, char* argv[]) {
 		sum += subtotals[i];
 	}
 	cout << "total: " << sum << endl;
+
+	char* nosummary = getenv("NOSUMMARY");
+	if (!nosummary) {
+		cerr << endl << "Total Producer/Consumer blocks in insert/remove: "
+			 << buffer.blocks() << endl;
+		malloc_stats();
+	}
 
 	return 0;
 }

@@ -43,21 +43,12 @@ class BoundedBuffer {
 		return blockCount;
 	}
 	void poison() {
+#ifdef NOBUSY
+		while (!blk.empty());
+#endif	// NOBUSY
 		mutex.acquire();
 		poisoned = true;
-#ifdef BUSY
 		clk.broadcast();
-#endif	// BUSY
-#ifdef NOBUSY
-		if (!blk.empty() && !clk.empty()) {
-			clk.signal();
-		} else if (!blk.empty()) {
-			signal_flag = true;
-			blk.signal();
-		} else {
-			clk.broadcast();
-		}
-#endif	// NOBUSY
 		mutex.release();
 	}
 	void insert(T elem);
@@ -73,7 +64,6 @@ void BoundedBuffer<T>::insert(T elem) {
 	while (count == size) {
 		blockCount++;
 		plk.wait(mutex);
-		blockCount--;
 	}
 
 	// Perform assertion
@@ -101,7 +91,6 @@ T BoundedBuffer<T>::remove() {
 		}
 		blockCount++;
 		clk.wait(mutex);
-		blockCount--;
 	}
 
 	// Perform assertion
@@ -126,19 +115,19 @@ void BoundedBuffer<T>::insert(T elem) {
 	PROD_ENTER;
 
 	if (signal_flag) {
+		blockCount++;
 		blk.wait(mutex);
 		signal_flag = false;
 	}
 
 	if (count == size) {
-		blockCount++;
 		if (!blk.empty()) {
 			signal_flag = true;
 			blk.signal();
 		}
+		blockCount++;
 		plk.wait(mutex);
 		signal_flag = false;
-		blockCount--;
 	}
 
 	// Perform assertion
@@ -166,6 +155,7 @@ T BoundedBuffer<T>::remove() {
 	CONS_ENTER;
 
 	if (signal_flag) {
+		blockCount++;
 		blk.wait(mutex);
 		signal_flag = false;
 	}
@@ -174,8 +164,6 @@ T BoundedBuffer<T>::remove() {
 		if (!blk.empty()) {
 			signal_flag = true;
 			blk.signal();
-		} else if (poisoned) {
-			clk.broadcast();
 		}
 		if (poisoned) {
 			mutex.release();
@@ -184,7 +172,6 @@ T BoundedBuffer<T>::remove() {
 		blockCount++;
 		clk.wait(mutex);
 		signal_flag = false;
-		blockCount--;
 		if (count == 0 && poisoned) {
 			mutex.release();
 			_Throw Poison();

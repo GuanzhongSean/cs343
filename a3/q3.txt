@@ -1,0 +1,38 @@
+(i) Performance Comparison of Busy and Non-Busy Waiting Implementations
+
+| Implementation   | Kernels | User Time (u) | System Time (s) | Real Time (r) | Memory (kb) |
+| BUSY (No OPT)    | 1       | 5.05u         | 0.00s           | 0:04.62r      | 29356kb     |
+| NOBUSY (No OPT)  | 1       | 7.10u         | 0.03s           | 0:06.53r      | 35272kb     |
+| BUSY (OPT -O2)   | 1       | 4.79u         | 0.00s           | 0:04.38r      | 29404kb     |
+| NOBUSY (OPT -O2) | 1       | 6.77u         | 0.02s           | 0:06.21r      | 35280kb     |
+
+(ii) Performance Difference Between Busy and Non-Busy Waiting (Uniprocessor)
+- The BUSY implementation (without optimization) completes in 5.05u seconds, whereas the NOBUSY implementation takes 7.10u seconds. This suggests that busy waiting is slightly more efficient in this scenario.
+- Enabling optimization (`-O2`) improves both implementations, but the BUSY implementation still runs faster, completing in 4.79u seconds compared to 6.77u seconds for NOBUSY.
+- Performance Gain with Optimization:
+- BUSY: ~5.2% improvement in execution time (5.05u → 4.79u)
+- NOBUSY: ~4.6% improvement in execution time (7.10u → 6.77u)
+- Memory Usage: The BUSY implementation consistently uses less memory than NOBUSY, with an approximate 30% lower peak memory consumption when optimized.
+
+(iii) Performance Comparison on Multiprocessor Execution (4 Kernel Threads)
+
+| Implementation   | Kernels | User Time (u) | System Time (s) | Real Time (r) | Memory (kb) |
+| BUSY (No OPT)    | 4       | 145.77u       | 0.29s           | 0:36.38r      | 39448kb     |
+| NOBUSY (No OPT)  | 4       | 186.09u       | 0.32s           | 0:48.56r      | 39168kb     |
+| BUSY (OPT -O2)   | 4       | 145.05u       | 0.21s           | 0:36.20r      | 31396kb     |
+| NOBUSY (OPT -O2) | 4       | 186.34u       | 0.25s           | 0:48.56r      | 39288kb     |
+
+(iv) Performance Difference Between Busy and Non-Busy Waiting (4 Kernel Threads)
+- The BUSY implementation completes in 36.38r seconds without optimization and 36.20r seconds with optimization.
+- The NOBUSY implementation takes 48.56r seconds in both cases, indicating no significant benefit from optimization in a multi-threaded environment.
+- Real Time Scaling: The NOBUSY implementation experiences ~33.6% longer execution time compared to the BUSY implementation when using 4 kernel threads.
+
+(v) Speculated Reasons for Performance Differences between Busy-Waiting and Non-Busy-Waiting
+- In the BUSY implementation, tasks continuously check for available buffer slots, leading to rapid response when slots become available. However, this increases CPU usage.
+- The NOBUSY implementation avoids excessive checking by using proper condition synchronization, but incurs overhead due to context switching.
+- Result: When executed with a single processor, busy waiting is faster but can cause higher CPU utilization.
+- Increased Blocking in NOBUSY: The NOBUSY version exhibits significantly higher producer/consumer blocking counts (10,000,049 vs. 642,287 in BUSY). This leads to greater synchronization overhead, making it slower in practice.
+
+(vi) Speculated Reasons for Performance Differences Between Uniprocessor and Multiprocessor Execution
+- Both BUSY and NOBUSY implementations perform worse with multiple processors, with highly increased user time, likely stems from excessive thread contention and synchronization overhead.
+- Although the decreasing rate from user time to real time is higher than uniprocessor, the real time of multiprocessor is much higher then that of uniprocessor.

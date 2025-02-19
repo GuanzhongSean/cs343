@@ -4,7 +4,7 @@ import os
 
 BUFFER_EXE = "./buffer"
 REFERENCE_EXE = "./buffer_NOBUSY_BARGINGCHECK"
-BIMPL = ["NOBUSY"]
+BIMPL = ["BUSY", "NOBUSY"]
 
 
 def write_to_file(content, filename):
@@ -25,10 +25,10 @@ def build_buffer(bimpl):
 def generate_random_params():
     cons = random.randint(5, 100)       # Number of consumers
     prods = random.randint(5, 100)      # Number of producers
-    produce = random.randint(10, 2000)  # Items produced per producer
+    produce = random.randint(10, 5000)  # Items produced per producer
     buf_size = random.randint(5, 100)   # Buffer size
     delay = random.randint(1, 5)      # Delay for yielding
-    procs = random.randint(1, 5)       # Number of processors
+    procs = random.randint(1, 8)       # Number of processors
     return cons, prods, produce, buf_size, delay, procs
 
 
@@ -83,7 +83,7 @@ def validate_tests(test_count=10):
 
             if bimpl == "NOBUSY":
                 # Validate error (must be empty for NOBUSY)
-                if error != "":
+                if "**** BARGING ERROR ****" in error:
                     print(f"❌ Error in output for test case (Cons={cons}, Prods={prods}, ...)")
                     write_to_file(error, f"test_results/{bimpl}_error_{i+1}.txt")
                     failed_tests += 1
