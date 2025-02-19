@@ -1,8 +1,8 @@
-OPT := # -O3
+OPT := -O2
 STYPE := int
 SIMPL := CBEGIN
 BIMPL := NOBUSY
-BCHECK := NOBARGINGCHECK
+BCHECK := BARGINGCHECK
 
 CXX = u++					# compiler
 CXXFLAGS = -quiet -g -Wall -Wextra -multi -MMD ${OPT} -DSTYPE="${STYPE}" -D"${SIMPL}" \
@@ -12,7 +12,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 OBJECTS1 = q2main.o # object files forming 1st executable with prefix "q2"
 EXEC1 = quicksort				# 1st executable name
 
-OBJECTS2 = # object files forming 2nd executable with prefix "q3"
+OBJECTS2 = q3main.o # object files forming 2nd executable with prefix "q3"
 EXEC2 = buffer					# 2nd executable name
 
 OBJECTS3 = q1.o                    # object files for q1

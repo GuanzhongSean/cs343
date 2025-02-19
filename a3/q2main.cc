@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
 	int depth = 0;
 	struct cmd_error {};
 	try {
+		if (argc > 4) throw cmd_error();
 		if (argc > 3) depth = convert(argv[3]);
 		if (depth < 0) throw cmd_error();
 		if (argc > 1 && strcmp(argv[1], "-t") == 0) {
