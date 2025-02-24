@@ -2,7 +2,7 @@ OPT := -O2
 STYPE := int
 SIMPL := CBEGIN
 BIMPL := NOBUSY
-BCHECK := BARGINGCHECK
+BCHECK := NOBARGINGCHECK
 
 CXX = u++					# compiler
 CXXFLAGS = -quiet -g -Wall -Wextra -multi -MMD ${OPT} -DSTYPE="${STYPE}" -D"${SIMPL}" \
@@ -91,6 +91,9 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 
 clean:						# remove files that can be regenerated
 	rm -rf *.d *.o ${EXECS} ${EXEC3} QuickImpl BufImpl test_results/
+
+test:
+	python q2test.py && python q3test.py
 
 submit:
 	submit cs343 3 .

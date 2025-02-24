@@ -15,7 +15,9 @@ def write_to_file(content, filename):
 
 def build_buffer(bimpl):
     print(f"\n🔧 Building buffer with BIMPL={bimpl}...\n")
-    result = subprocess.run(["make", "buffer", f"BIMPL={bimpl}"], capture_output=True, text=True)
+    bcheck = "BARGINGCHECK" if bimpl == "NOBUSY" else "NOBARGINGCHECK"
+    result = subprocess.run(
+        ["make", "buffer", f"BIMPL={bimpl}", f"BCHECK={bcheck}"], capture_output=True, text=True)
     if result.returncode != 0:
         print(f"❌ Build failed for {bimpl}:\n{result.stderr}")
         exit(1)
