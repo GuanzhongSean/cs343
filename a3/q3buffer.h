@@ -44,7 +44,7 @@ class BoundedBuffer {
 	}
 	void poison() {
 #ifdef NOBUSY
-		while (!blk.empty());
+		while (!blk.empty()) uThisTask().yield();
 #endif	// NOBUSY
 		mutex.acquire();
 		poisoned = true;
