@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <iostream>
-#include <vector>
 
 #include "q2player.h"
 #include "q2printer.h"
@@ -77,9 +76,9 @@ int main(int argc, char *argv[]) {
 		}
 		Player::players(players);
 		Printer printer(players, cards);
-		vector<Player *> playerList;
+		Player *playerList[players];
 		for (int p = 0; p < players; p++) {
-			playerList.push_back(new Player(prng, p, printer));
+			playerList[p] = new Player(prng, p, printer);
 		}
 
 		// Set up player circle
