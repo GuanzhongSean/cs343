@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <climits>
 using namespace std;
 #include <malloc.h>										// malloc_stats
 

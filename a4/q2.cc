@@ -1,36 +1,74 @@
-static void CriticalSection() {
-	static uBaseTask * volatile curr;					// shared
-	curr = &uThisTask();
-	for ( unsigned int i = 0; i < 100; i += 1 ) {		// work
-		if ( curr != &uThisTask() ) { abort( "Interference" ); } // check
-	} // for
-}
+#if defined( MC )					// mutex/condition solution
+#include "BargingCheckVote.h"
+// includes for this kind of vote-tallier
+class TallyVotes {
+	// private declarations for this kind of vote-tallier
+#elif defined( SEM )				// semaphore solution
+#include "BargingCheckVote.h"
+// includes for this kind of vote-tallier
+class TallyVotes {
+	// private declarations for this kind of vote-tallier
+#elif defined( BAR )				// barrier solution
+// includes for this kind of vote-tallier
+_Cormonitor TallyVotes : public uBarrier {
+	// private declarations for this kind of vote-tallier
+#else
+	#error unsupported voter type
+#endif
+	// common declarations
+  public:							// common interface
+	_Exception Failed {};
+	struct Ballot { unsigned int picture, statue, giftshop; };
+	enum TourKind : char { Picture = 'p', Statue = 's', GiftShop = 'g' };
+	struct Tour { TourKind tourkind; unsigned int groupno; };
 
-enum Intent { WantIn, DontWantIn };
+	TallyVotes( unsigned int voters, unsigned int group, Printer & printer );
+	Tour vote( unsigned int id, Ballot ballot );
+	void done(
+		#if defined( MC ) || defined( BAR )
+		unsigned int id
+		#endif
+	);
+};
 
-_Task Tsay {
-	static Intent * volatile Last;
-	Intent & me, & you;
 
-	void main() {
-		for ( unsigned int i = 0; i < 10'000'000; i += 1 ) {
-			me = WantIn;								// entry protocol
-			Last = &me;									// race
-			uFence();									// prevent hardware reordering (x86)
-			if ( you == WantIn )
-				while ( Last == &me ) {}
-			CriticalSection();							// critical section
-			me = DontWantIn;							// exit protocol
-			Last = &me;
-		}
+#include "BargingCheckVote.h"
+class TallyVotes {
+	...									// regular declarations
+	BCHECK_DECL;
+  public:
+	...									// regular declarations
+	Tour vote( unsigned int id __attribute__(( unused )), Ballot ballot ) {
+		// acquire mutual exclusion
+		VOTER_ENTER( tour-group-size );
+		...								// voter code
+		VOTER_LEAVE( tour-group-size );
+		// release mutual exclusion
+		return ...
+	}
+};
+
+
+_Task Voter {
+	TallyVotes::Ballot cast() __attribute__(( warn_unused_result )) {  // cast 3-way vote
+		// O(1) random selection of 3 items without replacement using divide and conquer.
+	    static const unsigned int voting[3][2][2] = { { {2,1}, {1,2} }, { {0,2}, {2,0} }, { {0,1}, {1,0} } };
+	    unsigned int picture = prng( 3 ), statue = prng( 2 );
+	    return (TallyVotes::Ballot){ picture, voting[picture][statue][0], voting[picture][statue][1] };
 	}
   public:
-	Tsay( Intent & me, Intent & you ) : me( me ), you( you ) {}
+	enum States : char { Start = 'S', Vote = 'V', Block = 'B', Unblock = 'U', Barging = 'b',
+		  Done = 'D', Complete = 'C', Going = 'G', Failed = 'X', Terminated = 'T' };
+	Voter( unsigned int id, unsigned int tours, TallyVotes & voteTallier, Printer & printer );
 };
-Intent * volatile Tsay::Last;
 
-int main() {
-	uProcessor p;
-	Intent me = DontWantIn, you = DontWantIn;			// shared
-	Tsay t0( me, you ), t1( you, me );
-}
+
+_Monitor / _Cormonitor Printer {	// chose one of the two kinds of type
+  public:
+	Printer( unsigned int voters );
+	void print( unsigned int id, Voter::States state );
+	void print( unsigned int id, Voter::States state, TallyVotes::Tour tour );
+	void print( unsigned int id, Voter::States state, TallyVotes::Ballot vote );
+	void print( unsigned int id, Voter::States state, unsigned int numBlocked );
+	void print( unsigned int id, Voter::States state, unsigned int numBlocked, unsigned int group );
+};
