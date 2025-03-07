@@ -29,7 +29,7 @@ all : ${EXEC}					# build all executables
 
 ${EXEC1} : ${OBJECT1}
 	${CXX} ${CXXFLAGS} $^ -o $@
-	/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 10000000 20
+	/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
 
 -include VoteImpl
 

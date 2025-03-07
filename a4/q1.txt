@@ -1,0 +1,145 @@
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$ rm q1.o && make q1 Q1IMPL=ARRAY
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD  -D"ARRAY" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"    -c -o q1.o q1.cc
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD  -D"ARRAY" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"  q1.o -o q1
+/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
+
+PID: 112859 Heap statistics: (storage request / allocation)
+  malloc    >0 calls 49; 0 calls 0; storage 89,259 / 99,456 bytes
+  aalloc    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  calloc    >0 calls 2; 0 calls 0; storage 1,344 / 1,856 bytes
+  memalign  >0 calls 8; 0 calls 0; storage 2,315,664 / 2,359,424 bytes
+  amemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  cmemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  resize    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  realloc   >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+            copies 0; smaller 0; alignment 0; 0 fill 0
+  free      !null calls 3; null/0 calls 4; storage 4,573 / 4,672 bytes
+  return    pulls 0; pushes 0; storage 0 / 0 bytes
+  sbrk      calls 1; storage 8,388,608 bytes
+  mmap      calls 0; reuse 0; storage 0 / 0 bytes
+  munmap    calls 0; storage 0 / 0 bytes
+  remainder calls 0; storage 0 bytes
+  threads   started 2; exited 0
+  heaps     new 2; reused 0
+0.92u 0.01s 0:00.93r 5148kb
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$ rm q1.o && make q1 Q1IMPL=STRSTREAM
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD  -D"STRSTREAM" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"    -c -o q1.o q1.cc
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD  -D"STRSTREAM" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"  q1.o -o q1
+/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
+
+PID: 114055 Heap statistics: (storage request / allocation)
+  malloc    >0 calls 51; 0 calls 0; storage 90,797 / 101,632 bytes
+  aalloc    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  calloc    >0 calls 2; 0 calls 0; storage 1,344 / 1,856 bytes
+  memalign  >0 calls 8; 0 calls 0; storage 2,315,664 / 2,359,424 bytes
+  amemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  cmemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  resize    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  realloc   >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+            copies 0; smaller 0; alignment 0; 0 fill 0
+  free      !null calls 4; null/0 calls 4; storage 5,086 / 5,312 bytes
+  return    pulls 0; pushes 0; storage 0 / 0 bytes
+  sbrk      calls 1; storage 8,388,608 bytes
+  mmap      calls 0; reuse 0; storage 0 / 0 bytes
+  munmap    calls 0; storage 0 / 0 bytes
+  remainder calls 0; storage 0 bytes
+  threads   started 2; exited 0
+  heaps     new 2; reused 0
+78.64u 0.18s 1:18.59r 5152kb
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$ rm q1.o && make q1 Q1IMPL=STRING
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD  -D"STRING" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"    -c -o q1.o q1.cc
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD  -D"STRING" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"  q1.o -o q1
+/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
+
+PID: 124140 Heap statistics: (storage request / allocation)
+  malloc    >0 calls 3,500,000,054; 0 calls 0; storage 174,500,091,744 / 280,000,102,448 bytes
+  aalloc    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  calloc    >0 calls 2; 0 calls 0; storage 1,344 / 1,856 bytes
+  memalign  >0 calls 8; 0 calls 0; storage 2,315,664 / 2,359,424 bytes
+  amemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  cmemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  resize    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  realloc   >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+            copies 0; smaller 0; alignment 0; 0 fill 0
+  free      !null calls 3,500,000,007; null/0 calls 4; storage 174,500,005,777 / 280,000,006,128 bytes
+  return    pulls 0; pushes 0; storage 0 / 0 bytes
+  sbrk      calls 1; storage 8,388,608 bytes
+  mmap      calls 0; reuse 0; storage 0 / 0 bytes
+  munmap    calls 0; storage 0 / 0 bytes
+  remainder calls 0; storage 0 bytes
+  threads   started 2; exited 0
+  heaps     new 2; reused 0
+208.16u 0.48s 3:27.98r 5172kb
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$ rm q1.o && make q1 Q1IMPL=ARRAY OPT=-O2
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD -O2 -D"ARRAY" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"    -c -o q1.o q1.cc
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD -O2 -D"ARRAY" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"  q1.o -o q1
+/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
+
+PID: 144166 Heap statistics: (storage request / allocation)
+  malloc    >0 calls 49; 0 calls 0; storage 89,259 / 99,456 bytes
+  aalloc    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  calloc    >0 calls 2; 0 calls 0; storage 1,344 / 1,856 bytes
+  memalign  >0 calls 8; 0 calls 0; storage 2,315,664 / 2,359,424 bytes
+  amemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  cmemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  resize    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  realloc   >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+            copies 0; smaller 0; alignment 0; 0 fill 0
+  free      !null calls 3; null/0 calls 4; storage 4,573 / 4,672 bytes
+  return    pulls 0; pushes 0; storage 0 / 0 bytes
+  sbrk      calls 1; storage 8,388,608 bytes
+  mmap      calls 0; reuse 0; storage 0 / 0 bytes
+  munmap    calls 0; storage 0 / 0 bytes
+  remainder calls 0; storage 0 bytes
+  threads   started 2; exited 0
+  heaps     new 2; reused 0
+0.31u 0.00s 0:00.31r 5212kb
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$ rm q1.o && make q1 Q1IMPL=STRING OPT=-O2
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD -O2 -D"STRING" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"    -c -o q1.o q1.cc
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD -O2 -D"STRING" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"  q1.o -o q1
+/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
+
+PID: 145170 Heap statistics: (storage request / allocation)
+  malloc    >0 calls 3,500,000,054; 0 calls 0; storage 174,500,091,744 / 280,000,102,448 bytes
+  aalloc    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  calloc    >0 calls 2; 0 calls 0; storage 1,344 / 1,856 bytes
+  memalign  >0 calls 8; 0 calls 0; storage 2,315,664 / 2,359,424 bytes
+  amemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  cmemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  resize    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  realloc   >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+            copies 0; smaller 0; alignment 0; 0 fill 0
+  free      !null calls 3,500,000,007; null/0 calls 4; storage 174,500,005,777 / 280,000,006,128 bytes
+  return    pulls 0; pushes 0; storage 0 / 0 bytes
+  sbrk      calls 1; storage 8,388,608 bytes
+  mmap      calls 0; reuse 0; storage 0 / 0 bytes
+  munmap    calls 0; storage 0 / 0 bytes
+  remainder calls 0; storage 0 bytes
+  threads   started 2; exited 0
+  heaps     new 2; reused 0
+111.74u 0.27s 1:51.68r 5160kb
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$ rm q1.o && make q1 Q1IMPL=STRSTREAM OPT=-O2
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD -O2 -D"STRSTREAM" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"    -c -o q1.o q1.cc
+u++                                      -quiet  -g -multi -Wall -Wextra -MMD -O2 -D"STRSTREAM" -D"MC" -D"OUTPUT" -D"BARGINGCHECK"  q1.o -o q1
+/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./q1 50000000 10
+
+PID: 204245 Heap statistics: (storage request / allocation)
+  malloc    >0 calls 51; 0 calls 0; storage 90,797 / 101,632 bytes
+  aalloc    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  calloc    >0 calls 2; 0 calls 0; storage 1,344 / 1,856 bytes
+  memalign  >0 calls 8; 0 calls 0; storage 2,315,664 / 2,359,424 bytes
+  amemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  cmemalign >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  resize    >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+  realloc   >0 calls 0; 0 calls 0; storage 0 / 0 bytes
+            copies 0; smaller 0; alignment 0; 0 fill 0
+  free      !null calls 4; null/0 calls 4; storage 5,086 / 5,312 bytes
+  return    pulls 0; pushes 0; storage 0 / 0 bytes
+  sbrk      calls 1; storage 8,388,608 bytes
+  mmap      calls 0; reuse 0; storage 0 / 0 bytes
+  munmap    calls 0; storage 0 / 0 bytes
+  remainder calls 0; storage 0 bytes
+  threads   started 2; exited 0
+  heaps     new 2; reused 0
+75.28u 0.18s 1:15.25r 5184kb
+j76xiao@ubuntu2204-014:~/cs343/a4(master)$
