@@ -15,7 +15,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 OBJECT1 = q1.o
 EXEC1 = q1
 
-OBJECTS = q2tallyVotes${VIMPL}.o
+OBJECTS = q2tallyVotes${VIMPL}.o q2main.o q2printer.o q2voter.o
 EXEC = vote
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
