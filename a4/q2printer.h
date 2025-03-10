@@ -8,6 +8,12 @@
 
 using namespace std;
 
+#ifdef NOOUTPUT
+#define PRINT(stmt)
+#else
+#define PRINT(stmt) stmt
+#endif	// NOOUTPUT
+
 _Monitor Printer {
 	struct PrinterEntry {
 		bool active = false;

@@ -22,18 +22,18 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		_Throw Failed();
 	}
 
-	printer.print(id, Voter::States::Vote, ballot);
+	PRINT(printer.print(id, Voter::States::Vote, ballot);)
 	pictureVotes += ballot.picture;
 	statueVotes += ballot.statue;
 	giftShopVotes += ballot.giftshop;
 	waiting++;
 
 	if (waiting < groupSize) {
-		printer.print(id, Voter::States::Block, waiting);
+		PRINT(printer.print(id, Voter::States::Block, waiting);)
 		mutex.V();
 		sync.P();
 		waiting--;
-		printer.print(id, Voter::States::Unblock, waiting);
+		PRINT(printer.print(id, Voter::States::Unblock, waiting);)
 		if (voters < groupSize) {
 			mutex.V();
 			_Throw Failed();
@@ -46,7 +46,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 				? GiftShop
 			: (pictureVotes >= statueVotes) ? Picture
 											: Statue;
-		printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});
+		PRINT(printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});)
 		pictureVotes = statueVotes = giftShopVotes = 0;
 	}
 

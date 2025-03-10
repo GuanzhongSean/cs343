@@ -20,15 +20,15 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	if (waiters() == 0) {
 		reset(groupSize);
 	}
-	printer.print(id, Voter::States::Vote, ballot);
+	PRINT(printer.print(id, Voter::States::Vote, ballot);)
 	pictureVotes += ballot.picture;
 	statueVotes += ballot.statue;
 	giftShopVotes += ballot.giftshop;
 
 	if (waiters() != total() - 1) {
-		printer.print(id, Voter::Block, waiters() + 1);
+		PRINT(printer.print(id, Voter::Block, waiters() + 1);)
 		uBarrier::block();
-		printer.print(id, Voter::Unblock, waiters());
+		PRINT(printer.print(id, Voter::Unblock, waiters());)
 	} else {
 		uBarrier::block();
 		groupNo++;
@@ -37,7 +37,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 				? GiftShop
 			: (pictureVotes >= statueVotes) ? Picture
 											: Statue;
-		printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});
+		PRINT(printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});)
 		pictureVotes = statueVotes = giftShopVotes = 0;
 	}
 
@@ -52,6 +52,6 @@ void TallyVotes::done(unsigned int id) {
 	voters--;
 	if (voters < groupSize && waiters() > 0) {
 		block();
-		printer.print(id, Voter::States::Done);
+		PRINT(printer.print(id, Voter::States::Done);)
 	}
 }

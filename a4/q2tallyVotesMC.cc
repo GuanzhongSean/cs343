@@ -24,14 +24,14 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 
 	if (signal) {
 		barging++;
-		printer.print(id, Voter::States::Barging, barging, groupNo);
+		PRINT(printer.print(id, Voter::States::Barging, barging, groupNo);)
 		blk.wait(mutex);
 		barging--;
 		signal = false;
 		dlk.broadcast();
 	}
 
-	printer.print(id, Voter::States::Vote, ballot);
+	PRINT(printer.print(id, Voter::States::Vote, ballot);)
 	pictureVotes += ballot.picture;
 	statueVotes += ballot.statue;
 	giftShopVotes += ballot.giftshop;
@@ -47,10 +47,10 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 			mutex.release();
 			_Throw Failed();
 		}
-		printer.print(id, Voter::States::Block, waiting);
+		PRINT(printer.print(id, Voter::States::Block, waiting);)
 		vlk.wait(mutex);
 		waiting--;
-		printer.print(id, Voter::States::Unblock, waiting);
+		PRINT(printer.print(id, Voter::States::Unblock, waiting);)
 		if (voters < groupSize) {
 			mutex.release();
 			_Throw Failed();
@@ -70,7 +70,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 				? GiftShop
 			: (pictureVotes >= statueVotes) ? Picture
 											: Statue;
-		printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});
+		PRINT(printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});)
 		pictureVotes = statueVotes = giftShopVotes = 0;
 		if (vlk.signal()) {
 			signal = true;
@@ -86,7 +86,7 @@ void TallyVotes::done(unsigned int id) {
 	mutex.acquire();
 	if (signal && voters == groupSize) {
 		dlk.wait(mutex);
-		printer.print(id, Voter::States::Done);
+		PRINT(printer.print(id, Voter::States::Done);)
 	} else {
 		dlk.broadcast();
 	}

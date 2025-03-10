@@ -8,11 +8,11 @@ Printer::Printer(unsigned int voters) : numVoters(voters) {
 		tours[i] = new unsigned int[3];
 		tours[i][0] = tours[i][1] = tours[i][2] = 0;
 	}
-	cout << "V0";
-	for (unsigned int i = 1; i < voters; i++) cout << "\tV" << i;
-	cout << "\n*******";
-	for (unsigned int i = 1; i < voters; i++) cout << "\t*******";
-	cout << endl;
+	PRINT(cout << "V0";
+		  for (unsigned int i = 1; i < voters; i++) cout << "\tV" << i;
+		  cout << "\n*******";
+		  for (unsigned int i = 1; i < voters; i++) cout << "\t*******";
+		  cout << endl;)
 }
 
 Printer::~Printer() {
@@ -22,8 +22,8 @@ Printer::~Printer() {
 		delete[] tours[i];
 	}
 	delete[] tours;
-	cout << "*****************" << endl;
-	cout << "All tours ended" << endl;
+	PRINT(cout << "*****************" << endl;
+		  cout << "All tours ended" << endl;)
 }
 
 void Printer::flush() {

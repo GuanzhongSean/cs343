@@ -1,0 +1,46 @@
+A4Q2b
+
+1. Performance Comparison (Parameters: 100 10 50000 1003)
+
+| Implementation | User Time | Real Time| Memory Usage |
+| MC (1 core)    | 2.21s     | 2.21s    | 6052kb       |
+| SEM (1 core)   | 1.68s     | 1.68s    | 6044kb       |
+| BAR (1 core)   | 1.98s     | 1.99s    | 6360kb       |
+| MC (2 cores)   | 96.52s    | 48.24s   | 6224kb       |
+| SEM (2 cores)  | 75.58s    | 37.78s   | 6192kb       |
+| BAR (2 cores)  | 81.24s    | 40.61s   | 6344kb       |
+
+Single-Processor:
+- Semaphore (SEM) performed the best in single-processor execution, with a user time of 1.68s, compared to 1.98s for BAR and 2.21s for MC.
+- Barrier (BAR) was slightly slower than SEM, likely due to its overhead of managing group synchronization.
+- Mutex/Condition Variables (MC) was the slowest, as condition variables introduce more context switching and require careful handling of waking blocked threads.
+
+Two-Processors:
+- Semaphore (SEM) remains the fastest, with a user time of 75.58s, compared to 81.24s for BAR and 96.52s for MC.
+- The performance improvement with two processors is significant, with real-time execution nearly halved for all implementations.
+- MC scales the worst, likely due to the overhead introduced by frequent locking and unlocking operations.
+- Barrier (BAR) scales better than MC but worse than SEM, as `uBarrier::block()` ensures efficient synchronization but can still introduce some delays compared to semaphores.
+
+Memory Usage
+- Memory usage remains relatively consistent across implementations.
+- BAR used slightly more memory (6344KB) compared to MC (6224KB) and SEM (6192KB), possibly due to additional data structures for managing the barrier synchronization.
+
+2. Explanation of Performance Differences
+Why is SEM the Fastest?
+- Semaphores allow for efficient signaling and avoid the need for explicit condition variable management.
+- They minimize unnecessary context switching, leading to better CPU utilization.
+- The absence of extra wake-up conditions reduces overhead.
+
+Why is MC the Slowest?
+- Mutex/Condition Variables introduce more scheduling overhead due to the need for explicit signaling (`cond.signal()` or `cond.signalAll()`).
+- Extra care must be taken to avoid barging, leading to more complex thread synchronization logic.
+- With increasing concurrency, lock contention increases, making it scale poorly compared to SEM and BAR.
+
+Why is BAR in the Middle?
+- Barrier synchronization ensures that all tasks reach a synchronization point before proceeding, which introduces some overhead.
+- Unlike MC, it does not suffer from excessive thread wake-ups, but it still requires careful handling of quorum failure and group synchronization.
+
+3. Effect of Increasing Kernel Threads
+- As the number of processors increases, the performance gap narrows, since all implementations benefit from parallel execution.
+- MC does not scale well due to lock contention, but SEM and BAR scale better.
+- SEM remains the best choice due to its efficient wake-up mechanism and reduced lock contention.

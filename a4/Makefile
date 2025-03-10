@@ -4,9 +4,9 @@ VIMPL := MC
 OUTPUT := OUTPUT
 BCHECK := BARGINGCHECK
 
-CXX = u++					# compiler
+CXX = u++ # compiler
 CXXFLAGS = -quiet  -g -multi -Wall -Wextra -MMD ${OPT} -D"${Q1IMPL}" -D"${VIMPL}"\
-		-D"${OUTPUT}" -D"${BCHECK}" # compiler flags
+		-D"${OUTPUT}" -D"${BCHECK}" -Wno-unused-parameter # compiler flags
 ifeq ("${OUTPUT}","NOOUTPUT")
 	CXXFLAGS += -O2 -nodebug
 endif
@@ -45,6 +45,11 @@ ${EXEC} :
 	touch q2tallyVotes.h
 	${MAKE} ${EXEC} VIMPL="${VIMPL}" OUTPUT="${OUTPUT}" BCHECK="${BCHECK}"
 endif
+
+q2b:
+	${MAKE} ${EXEC} VIMPL="${VIMPL}" OUTPUT=NOOUTPUT BCHECK="${BCHECK}"
+	/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./vote 100 10 50000 1003
+	/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./vote 100 10 50000 1003 2
 
 VoteImpl :
 	echo "LOCKVIMPL=${VIMPL}\nOUTPUTTYPE=${OUTPUT}\nBCHECKIMPL=${BCHECK}" > VoteImpl
