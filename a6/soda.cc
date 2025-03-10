@@ -24,7 +24,7 @@ _Task WATCardOffice {
 		WATCard::FWATCard result;			// return future
 		Job( Args args ) : args( args ) {}
 	};
-	_Task Courier { ... };					// communicates with bank
+	_Task Courier { ... };					// communicates with bank (YOU DEFINE "Courier")
 
 	void main();
   public:
