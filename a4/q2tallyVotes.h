@@ -1,28 +1,31 @@
 #ifndef Q2TALLYVOTES_H
 #define Q2TALLYVOTES_H
+
 class Printer;
 
 #if defined(MC)	 // mutex/condition solution
 #include "BargingCheckVote.h"
+
 class TallyVotes {
 	uOwnerLock mutex;
 	uCondLock vlk, blk, dlk;
-	unsigned int voters, waiting, groupNo, barging;
+	unsigned int barging;
 	bool signal;
 	BCHECK_DECL;
 
 #elif defined(SEM)	// semaphore solution
+#include <uSemaphore.h>
+
 #include "BargingCheckVote.h"
+
 class TallyVotes {
-	uSemaphore mutex, groupSem;
-	unsigned int voters, waiting;
+	uSemaphore mutex, sync;
 	BCHECK_DECL;
 
 #elif defined(BAR)	// barrier solution
-_Cormonitor TallyVotes : public uBarrier {
-   protected:
-	void last();
+#include <uBarrier.h>
 
+_Cormonitor TallyVotes : public uBarrier {
 #else
 #error unsupported voter type
 #endif
@@ -47,7 +50,8 @@ _Cormonitor TallyVotes : public uBarrier {
 
 	// common declarations
    private:
-	unsigned int pictureVotes, statueVotes, giftShopVotes, groupSize;
+	unsigned int voters, waiting, groupNo, pictureVotes, statueVotes,
+		giftShopVotes, groupSize;
 	TourKind tour_kind;
 	Printer &printer;
 };

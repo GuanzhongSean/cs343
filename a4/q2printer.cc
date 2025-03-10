@@ -27,7 +27,12 @@ Printer::~Printer() {
 }
 
 void Printer::flush() {
+	unsigned int last = 0;
 	for (unsigned int i = 0; i < numVoters; i++) {
+		if (buffer[i].active) last = i + 1;
+	}
+	for (unsigned int i = 0; i < last; i++) {
+		if (i != 0) cout << "\t";
 		if (buffer[i].active) {
 			cout << (char)buffer[i].state;
 			switch (buffer[i].type) {
@@ -70,10 +75,9 @@ void Printer::flush() {
 					break;
 			}
 		}
-		cout << "\t";
 	}
 	cout << endl;
-	for (unsigned int i = 0; i < numVoters; i++) {
+	for (unsigned int i = 0; i < last; i++) {
 		buffer[i].active = false;
 	}
 }

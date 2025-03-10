@@ -1,38 +1,57 @@
+#include "q2printer.h"
 #include "q2tallyVotes.h"
 
 TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
-					   Printer &printer)
+					   Printer& printer)
 	: uBarrier(group),
-	  votersRemaining(voters),
-	  printer(printer),
-	  groupSize(group),
+	  voters(voters),
+	  waiting(0),
+	  groupNo(0),
 	  pictureVotes(0),
 	  statueVotes(0),
-	  giftShopVotes(0) {}
+	  giftShopVotes(0),
+	  groupSize(group),
+	  printer(printer) {}
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
+	if (voters < groupSize) {
+		_Throw Failed();
+	}
+	if (waiters() == 0) {
+		reset(groupSize);
+	}
+	printer.print(id, Voter::States::Vote, ballot);
 	pictureVotes += ballot.picture;
 	statueVotes += ballot.statue;
 	giftShopVotes += ballot.giftshop;
 
-	block();
+	if (waiters() != total() - 1) {
+		printer.print(id, Voter::Block, waiters() + 1);
+		uBarrier::block();
+		printer.print(id, Voter::Unblock, waiters());
+	} else {
+		uBarrier::block();
+		groupNo++;
+		tour_kind =
+			(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
+				? GiftShop
+			: (pictureVotes >= statueVotes) ? Picture
+											: Statue;
+		printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});
+		pictureVotes = statueVotes = giftShopVotes = 0;
+	}
 
-	TourKind tour =
-		(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
-			? GiftShop
-		: (pictureVotes >= statueVotes) ? Picture
-										: Statue;
-
-	return {tour, id};
-}
-
-void TallyVotes::done() {
-	votersRemaining--;
-	if (votersRemaining < uBarrier::size()) {
+	if (voters < groupSize) {
 		_Throw Failed();
 	}
+
+	return {tour_kind, groupNo};
 }
 
-void TallyVotes::last() {
-	pictureVotes = statueVotes = giftShopVotes = 0;
+void TallyVotes::done(unsigned int id) {
+	voters--;
+	if (voters < groupSize && waiters() > 0) {
+		block();
+		printer.print(id, Voter::States::Done);
+	}
 }

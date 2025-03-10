@@ -3,11 +3,11 @@
 
 TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
 					   Printer &printer)
-	: voters(voters),
+	: barging(0),
+	  signal(false),
+	  voters(voters),
 	  waiting(0),
 	  groupNo(0),
-	  barging(0),
-	  signal(false),
 	  pictureVotes(0),
 	  statueVotes(0),
 	  giftShopVotes(0),

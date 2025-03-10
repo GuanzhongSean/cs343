@@ -1,63 +1,70 @@
+#include "q2printer.h"
 #include "q2tallyVotes.h"
 
 TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
 					   Printer &printer)
-	: votersRemaining(voters),
-	  groupSize(group),
+	: mutex(1),
+	  sync(0),
+	  voters(voters),
 	  waiting(0),
 	  groupNo(0),
 	  pictureVotes(0),
 	  statueVotes(0),
 	  giftShopVotes(0),
-	  quorumFailed(false),
-	  printer(printer),
-	  mutex(1),
-	  sync(0) {}
+	  groupSize(group),
+	  printer(printer) {}
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	mutex.P();
 	VOTER_ENTER(groupSize);
-
-	if (quorumFailed) {
+	if (voters < groupSize) {
 		mutex.V();
-		throw Failed();
+		_Throw Failed();
 	}
 
+	printer.print(id, Voter::States::Vote, ballot);
 	pictureVotes += ballot.picture;
 	statueVotes += ballot.statue;
 	giftShopVotes += ballot.giftshop;
 	waiting++;
 
 	if (waiting < groupSize) {
+		printer.print(id, Voter::States::Block, waiting);
 		mutex.V();
 		sync.P();
-		if (quorumFailed) throw Failed();
+		waiting--;
+		printer.print(id, Voter::States::Unblock, waiting);
+		if (voters < groupSize) {
+			mutex.V();
+			_Throw Failed();
+		}
 	} else {
-		TourKind tour =
+		groupNo++;
+		waiting--;
+		tour_kind =
 			(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
 				? GiftShop
 			: (pictureVotes >= statueVotes) ? Picture
 											: Statue;
-		groupNo++;
-		pictureVotes = statueVotes = giftShopVotes = waiting = 0;
-		for (unsigned int i = 1; i < groupSize; ++i) sync.V();
-		mutex.V();
+		printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});
+		pictureVotes = statueVotes = giftShopVotes = 0;
 	}
 
 	VOTER_LEAVE(groupSize);
-	return {giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes
-				? GiftShop
-			: pictureVotes >= statueVotes ? Picture
-										  : Statue,
-			groupNo};
+	if (!sync.empty()) {
+		sync.V();
+	} else {
+		mutex.V();
+	}
+	return {tour_kind, groupNo};
 }
 
-void TallyVotes::done(unsigned int id) {
+void TallyVotes::done() {
 	mutex.P();
-	votersRemaining--;
-	if (votersRemaining < groupSize) {
-		quorumFailed = true;
-		for (unsigned int i = 1; i < groupSize; ++i) sync.V();
+	voters--;
+	if (voters < groupSize && !sync.empty()) {
+		sync.V(waiting);
+	} else {
+		mutex.V();
 	}
-	mutex.V();
 }
