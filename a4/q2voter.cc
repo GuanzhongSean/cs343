@@ -8,16 +8,14 @@ Voter::Voter(unsigned int id, unsigned int tours, TallyVotes &voteTallier,
 
 void Voter::main() {
 	for (unsigned int i = 0; i < tours; i++) {
-		yield(prng(20));
+		yield(prng() % 20);
 		printer.print(id, Start);
-		yield(prng(5));
+		yield(prng() % 5);
 
 		TallyVotes::Ballot ballot = cast();
-		printer.print(id, Vote, ballot);
 		try {
 			TallyVotes::Tour tour = voteTallier.vote(id, ballot);
-			printer.print(id, Complete, tour);
-			yield(prng(5));
+			yield(prng() % 5);
 			printer.print(id, Going, tour);
 		} catch (TallyVotes::Failed &) {
 			printer.print(id, Failed);

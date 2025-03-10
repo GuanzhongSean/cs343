@@ -6,8 +6,9 @@ class Printer;
 #include "BargingCheckVote.h"
 class TallyVotes {
 	uOwnerLock mutex;
-	uCondLock cond;
-	unsigned int voters, waiting, groupNo;
+	uCondLock vlk, blk, dlk;
+	unsigned int voters, waiting, groupNo, barging;
+	bool signal;
 	BCHECK_DECL;
 
 #elif defined(SEM)	// semaphore solution
@@ -25,11 +26,6 @@ _Cormonitor TallyVotes : public uBarrier {
 #else
 #error unsupported voter type
 #endif
-	// common declarations
-   private:
-	unsigned int pictureVotes, statueVotes, giftShopVotes, groupSize;
-	Printer &printer;
-
    public:	// common interface
 	_Exception Failed{};
 	struct Ballot {
@@ -48,6 +44,12 @@ _Cormonitor TallyVotes : public uBarrier {
 		unsigned int id
 #endif
 	);
+
+	// common declarations
+   private:
+	unsigned int pictureVotes, statueVotes, giftShopVotes, groupSize;
+	TourKind tour_kind;
+	Printer &printer;
 };
 
 #endif	// Q2TALLYVOTES_H

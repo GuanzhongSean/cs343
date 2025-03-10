@@ -1,6 +1,6 @@
 OPT := # -O2
 Q1IMPL := ARRAY
-VIMPL := MC
+VIMPL := SEM
 OUTPUT := OUTPUT
 BCHECK := BARGINGCHECK
 
@@ -57,7 +57,7 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -rf *.d ${OBJECT1} ${OBJECTS} ${EXEC1} ${EXEC} VoteImpl test_results/
+	rm -rf *.d q2tallyVotes*.o ${OBJECT1} ${OBJECTS} ${EXEC1} ${EXEC} VoteImpl test_results/
 
 test:
 	python q2test.py

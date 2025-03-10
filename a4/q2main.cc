@@ -42,23 +42,14 @@ int main(int argc, char* argv[]) {
 
 	uProcessor p[processors - 1] __attribute__((unused));
 
-	Printer printer(voters);
-	TallyVotes voteTallier(voters, group, printer);
 	{
+		Printer printer(voters);
+		TallyVotes voteTallier(voters, group, printer);
 		uArray(Voter, voterTasks, voters);
 		for (int i = 0; i < voters; i++) {
 			voterTasks[i](i, tours, voteTallier, printer);
 		}
 	}
-	// Voter* voterTasks[voters];
-
-	// for (int i = 0; i < voters; i++) {
-	// 	voterTasks[i] = new Voter(i, tours, voteTallier, printer);
-	// }
-
-	// for (Voter* v : voterTasks) {
-	// 	delete v;
-	// }
 
 	char* nosummary = getenv("NOSUMMARY");
 	if (!nosummary) {

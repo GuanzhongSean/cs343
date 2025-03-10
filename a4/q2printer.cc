@@ -1,63 +1,113 @@
 #include "q2printer.h"
 
-Printer::Printer(unsigned int voters) : numVoters(voters), buffer(voters, "") {
-	std::cout << "V0";
-	for (unsigned int i = 1; i < voters; ++i) std::cout << "\tV" << i;
-	std::cout << "\n*******";
-	for (unsigned int i = 1; i < voters; ++i) std::cout << "\t*******";
-	std::cout << std::endl;
+Printer::Printer(unsigned int voters) : numVoters(voters) {
+	buffer = new PrinterEntry[numVoters];
+	tours = new unsigned int*[numVoters];
+	for (unsigned int i = 0; i < numVoters; i++) {
+		buffer[i].active = false;
+		tours[i] = new unsigned int[3];
+		tours[i][0] = tours[i][1] = tours[i][2] = 0;
+	}
+	cout << "V0";
+	for (unsigned int i = 1; i < voters; i++) cout << "\tV" << i;
+	cout << "\n*******";
+	for (unsigned int i = 1; i < voters; i++) cout << "\t*******";
+	cout << endl;
 }
 
 Printer::~Printer() {
 	flush();
+	delete[] buffer;
+	for (unsigned int i = 0; i < numVoters; i++) {
+		delete[] tours[i];
+	}
+	delete[] tours;
+	cout << "*****************" << endl;
+	cout << "All tours ended" << endl;
 }
 
 void Printer::flush() {
-	bool empty = true;
-	for (const auto &entry : buffer) {
-		if (!entry.empty()) {
-			empty = false;
-			break;
+	for (unsigned int i = 0; i < numVoters; i++) {
+		if (buffer[i].active) {
+			cout << (char)buffer[i].state;
+			switch (buffer[i].type) {
+				case PrinterEntry::NONE:
+					if (buffer[i].state == Voter::States::Terminated) {
+						cout << " " << tours[i][0] << "," << tours[i][1] << ","
+							 << tours[i][2];
+					}
+					break;
+				case PrinterEntry::TOUR:
+					cout << " " << buffer[i].tour.tourkind;
+					if (buffer[i].state == Voter::States::Going) {
+						cout << " " << buffer[i].tour.groupno;
+						switch (buffer[i].tour.tourkind) {
+							case TallyVotes::TourKind::Picture:
+								tours[i][0]++;
+								break;
+							case TallyVotes::TourKind::Statue:
+								tours[i][1]++;
+								break;
+							case TallyVotes::TourKind::GiftShop:
+								tours[i][2]++;
+								break;
+						}
+					}
+					break;
+				case PrinterEntry::BALLOT:
+					cout << " " << buffer[i].ballot.picture << ","
+						 << buffer[i].ballot.statue << ","
+						 << buffer[i].ballot.giftshop;
+					break;
+				case PrinterEntry::BLOCKED:
+					cout << " " << buffer[i].numBlocked;
+					break;
+				case PrinterEntry::BLOCKED_GROUP:
+					cout << " " << buffer[i].numBlocked2 << " "
+						 << buffer[i].group;
+					break;
+				default:
+					break;
+			}
 		}
+		cout << "\t";
 	}
-	if (empty) return;
-
-	for (const auto &entry : buffer) {
-		if (!entry.empty()) std::cout << entry;
-		std::cout << "\t";
+	cout << endl;
+	for (unsigned int i = 0; i < numVoters; i++) {
+		buffer[i].active = false;
 	}
-	std::cout << std::endl;
-	buffer.assign(numVoters, "");  // Clear buffer
 }
 
 void Printer::print(unsigned int id, Voter::States state) {
-	buffer[id] = std::string(1, state);
-	flush();
+	if (buffer[id].active) flush();
+	buffer[id] = {true, state, {}, PrinterEntry::NONE};
 }
 
 void Printer::print(unsigned int id, Voter::States state,
 					TallyVotes::Tour tour) {
-	buffer[id] = std::string(1, state) + " " + (char)tour.tourkind;
-	flush();
+	if (buffer[id].active) flush();
+	buffer[id] = {true, state, {}, PrinterEntry::TOUR};
+	buffer[id].tour = tour;
 }
 
 void Printer::print(unsigned int id, Voter::States state,
 					TallyVotes::Ballot vote) {
-	buffer[id] = std::string(1, state) + " " + std::to_string(vote.picture) +
-				 "," + std::to_string(vote.statue) + "," +
-				 std::to_string(vote.giftshop);
-	flush();
+	if (buffer[id].active) flush();
+	buffer[id] = {true, state, {}, PrinterEntry::BALLOT};
+	buffer[id].ballot = vote;
 }
 
 void Printer::print(unsigned int id, Voter::States state,
 					unsigned int numBlocked) {
-	buffer[id] = std::string(1, state) + " " + std::to_string(numBlocked);
-	flush();
+	if (buffer[id].active) flush();
+	buffer[id] = {true, state, {}, PrinterEntry::BLOCKED};
+	buffer[id].numBlocked = numBlocked;
 }
 
 void Printer::print(unsigned int id, Voter::States state,
 					unsigned int numBlocked, unsigned int group) {
-	buffer[id] = std::string(1, state) + " " + std::to_string(numBlocked) +
-				 " " + std::to_string(group);
-	flush();
+	if (buffer[id].active) flush();
+	buffer[id] = {true, state, {}, PrinterEntry::BLOCKED_GROUP};
+	buffer[id].numBlocked2 = numBlocked;
+	buffer[id].group = group;
 }

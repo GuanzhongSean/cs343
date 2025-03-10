@@ -6,10 +6,27 @@
 
 #include "q2voter.h"
 
+using namespace std;
+
 _Monitor Printer {
-	unsigned int numVoters;
-	std::vector<std::string> buffer;
-	void flush();  // Helper function to flush buffered output
+	struct PrinterEntry {
+		bool active = false;
+		Voter::States state;
+		union {
+			TallyVotes::Tour tour;
+			TallyVotes::Ballot ballot;
+			unsigned int numBlocked;
+			struct {
+				unsigned int numBlocked2, group;
+			};
+		};
+		enum { NONE, TOUR, BALLOT, BLOCKED, BLOCKED_GROUP } type;
+	};
+
+	const unsigned int numVoters;
+	PrinterEntry* buffer;
+	unsigned int** tours;
+	void flush();
 
    public:
 	Printer(unsigned int voters);
