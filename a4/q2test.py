@@ -25,7 +25,7 @@ def build_vote(vimpl):
 
 def generate_random_params():
     voters = random.randint(1, 30)
-    group = random.randint(1, 50)
+    group = random.randint(1, 30)
     tours = random.randint(1, 50)
     seed = random.randint(1, 1000000000000)
     return voters, group, tours, seed
