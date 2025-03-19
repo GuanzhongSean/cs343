@@ -32,12 +32,10 @@ My execution result:
 100000000
 98001270
 ```
-indicating that the program does not fail in terms of correctness (no assertion failures or crashes). However, the numbers suggest that one thread is almost entirely dominating access to the critical section.
+indicating that the program does not fail in terms of correctness (no assertion failures or crashes). However, the numbers suggest that one thread is slightly faster.
 
-- This means that while the program still maintains mutual exclusion (rule 1), it has issues with fairness and livelock (rule 4).
-- The imbalance (100M vs. 98M) suggests that the two threads are getting access, but one gets slightly delayed due to unnecessary intent retractions.
-
-Thus, while it doesn’t fail functionally, it fails to provide an optimal balance of access.
+- This means that while the program maintains mutual exclusion (rule 1) and almost fairness between two threads.
+- Although the execution time taken is longer due to liveness, one thread is actually prevented to enter the critical section if another thread has already declared `WantIn`.
 
 (d)
 My execution result:
