@@ -1,0 +1,19 @@
+A5Q2
+
+In the Doctor Who episode Blink, at the climax, the Weeping Angels end up in a deadlock, not a livelock.
+
+What Happens in the Scene?
+- The Weeping Angels are a species that can only move when they are not being observed.
+- At the climax, multiple Weeping Angels surround a TARDIS, and they are positioned in a circle, all staring at each other.
+- Since an Angel turns to stone when observed, and each Angel in the circle is observing another, they all become permanently frozen.
+- They can never move again because each Angel is both an observer and being observed simultaneously.
+
+Why is This a Deadlock?
+- Each Angel is waiting for another Angel to look away (which will never happen).
+- No Angel can move because every Angel is being observed by another Angel.
+- No further progress is possible, meaning they are permanently stuck.
+
+Why is It Not a Livelock?
+- In a livelock, entities keep reacting to each other but still fail to progress.
+- The Angels do not keep adjusting their positions—they become permanently frozen.
+- There is no back-and-forth motion or repeated state change.
