@@ -1,0 +1,54 @@
+A5Q1
+
+(a)
+The Declare Intent and Retract Intent algorithms use a flag-based mechanism where a thread signals its intent to enter the critical section. However, this can lead to livelock under certain conditions:
+
+1. Simultaneous Intent Declaration: If both threads declare intent (`WantIn`) at the same time, they may end up repeatedly yielding to each other without making progress.
+2. Unfair Waiting: The `Retract` algorithm forces a thread to withdraw its intent (`DontWantIn`) if it finds the other thread also wants to enter. This can lead to a scenario where both threads keep resetting their intents without either successfully entering the critical section.
+3. Continuous Interference: The checking mechanism allows the possibility of indefinite postponement if both threads continuously block each other without progressing.
+
+This violation manifests in the `Retract` class, where the `me = DontWantIn;` statement inside the `for(;;)` loop allows a thread to withdraw its intent and keep waiting if the other thread is also waiting, potentially leading to livelock.
+
+(b)
+The Prioritized Retract Intent algorithm introduces a priority mechanism:
+
+1. Priority Imbalance: A high-priority thread (`HIGH`) does not back off as a low-priority thread (`low`) does.
+2. Starvation of Lower-Priority Thread: If a high-priority thread keeps wanting access to the critical section, the low-priority thread will continuously defer its intent (`DontWantIn`). This results in starvation, where the low-priority thread rarely or never enters the critical section.
+3. Execution Disparity: The execution results show that the higher-priority thread dominates access (e.g., `100000000` vs `23688` iterations), confirming starvation.
+
+This behavior is evident in the `Prioritized` class where:
+```
+if (priority == low) {
+    me = DontWantIn;
+    uFence();
+    while (you == WantIn) {}
+}
+```
+Here, the lower-priority thread continually yields, preventing it from ever entering the critical section when a higher-priority thread is active, which leads to starvation.
+
+(c)
+My execution result:
+```
+100000000
+98001270
+```
+indicating that the program does not fail in terms of correctness (no assertion failures or crashes). However, the numbers suggest that one thread is almost entirely dominating access to the critical section.
+
+- This means that while the program still maintains mutual exclusion (rule 1), it has issues with fairness and livelock (rule 4).
+- The imbalance (100M vs. 98M) suggests that the two threads are getting access, but one gets slightly delayed due to unnecessary intent retractions.
+
+Thus, while it doesn’t fail functionally, it fails to provide an optimal balance of access.
+
+(d)
+My execution result:
+```
+100000000
+23688
+```
+show an extreme imbalance between the two threads.
+
+- The high-priority thread gets almost all access, while the low-priority thread barely enters the critical section (`23688` times).
+- This violates rule 5 (starvation) because the low-priority thread is postponed indefinitely in most cases.
+- The design of the `Prioritized` class allows the high-priority thread to always win since the low-priority thread continuously defers (`me = DontWantIn`), leading to starvation.
+
+Thus, the two threads do not get equal access, and the lower-priority thread suffers from severe starvation due to the unfair priority mechanism.
