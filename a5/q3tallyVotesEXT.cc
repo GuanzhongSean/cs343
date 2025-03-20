@@ -25,7 +25,10 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		PRINT(printer.print(id, Voter::States::Block, waiting);)
 		try {
 			while (voters >= groupSize) {
-				_Accept(done){} or _Accept(vote) {
+				_Accept(done) {
+					PRINT(printer.print(id, Voter::States::Done);)
+				}
+				or _Accept(vote) {
 					break;
 				}
 			}
