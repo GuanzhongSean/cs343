@@ -11,13 +11,13 @@ TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
 	  pictureVotes(0),
 	  statueVotes(0),
 	  giftShopVotes(0),
-	  groupSize(group),
+	  group(group),
 	  printer(printer) {}
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	mutex.acquire();
-	VOTER_ENTER(groupSize);
-	if (voters < groupSize) {
+	VOTER_ENTER(group);
+	if (voters < group) {
 		mutex.release();
 		_Throw Failed();
 	}
@@ -37,13 +37,13 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	giftShopVotes += ballot.giftshop;
 	waiting++;
 
-	if (waiting < groupSize) {
+	if (waiting < group) {
 		if (blk.signal()) {
 			signal = true;
 		} else {
 			dlk.broadcast();
 		}
-		if (voters < groupSize) {
+		if (voters < group) {
 			mutex.release();
 			_Throw Failed();
 		}
@@ -51,7 +51,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		vlk.wait(mutex);
 		waiting--;
 		PRINT(printer.print(id, Voter::States::Unblock, waiting);)
-		if (voters < groupSize) {
+		if (voters < group) {
 			mutex.release();
 			_Throw Failed();
 		}
@@ -77,21 +77,21 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		}
 	}
 
-	VOTER_LEAVE(groupSize);
+	VOTER_LEAVE(group);
 	mutex.release();
 	return {tour_kind, groupNo};
 }
 
 void TallyVotes::done(unsigned int id) {
 	mutex.acquire();
-	if (signal && voters == groupSize) {
+	if (signal && voters == group) {
 		dlk.wait(mutex);
 		PRINT(printer.print(id, Voter::States::Done);)
 	} else {
 		dlk.broadcast();
 	}
 	voters--;
-	if (voters < groupSize) {
+	if (voters < group) {
 		vlk.broadcast();
 	}
 	mutex.release();

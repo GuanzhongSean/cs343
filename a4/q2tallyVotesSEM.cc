@@ -11,13 +11,13 @@ TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
 	  pictureVotes(0),
 	  statueVotes(0),
 	  giftShopVotes(0),
-	  groupSize(group),
+	  group(group),
 	  printer(printer) {}
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	mutex.P();
-	VOTER_ENTER(groupSize);
-	if (voters < groupSize) {
+	VOTER_ENTER(group);
+	if (voters < group) {
 		mutex.V();
 		_Throw Failed();
 	}
@@ -28,13 +28,13 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	giftShopVotes += ballot.giftshop;
 	waiting++;
 
-	if (waiting < groupSize) {
+	if (waiting < group) {
 		PRINT(printer.print(id, Voter::States::Block, waiting);)
 		mutex.V();
 		sync.P();
 		waiting--;
 		PRINT(printer.print(id, Voter::States::Unblock, waiting);)
-		if (voters < groupSize) {
+		if (voters < group) {
 			mutex.V();
 			_Throw Failed();
 		}
@@ -50,7 +50,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		pictureVotes = statueVotes = giftShopVotes = 0;
 	}
 
-	VOTER_LEAVE(groupSize);
+	VOTER_LEAVE(group);
 	if (!sync.empty()) {
 		sync.V();
 	} else {
@@ -62,7 +62,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 void TallyVotes::done() {
 	mutex.P();
 	voters--;
-	if (voters < groupSize && !sync.empty()) {
+	if (voters < group && !sync.empty()) {
 		sync.V(waiting);
 	} else {
 		mutex.V();
