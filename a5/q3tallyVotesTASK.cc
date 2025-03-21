@@ -1,8 +1,7 @@
 #include "q3printer.h"
 #include "q3tallyVotes.h"
 
-TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
-					   Printer &printer)
+TallyVotes::TallyVotes(unsigned int voters, unsigned int group, Printer &printer)
 	: voters(voters),
 	  waiting(0),
 	  groupNo(0),
@@ -38,8 +37,7 @@ void TallyVotes::main() {
 				}
 			}
 			or _Accept(vote) {
-				PRINT(
-					printer.print(voter_id, Voter::States::Vote, voter_ballot);)
+				PRINT(printer.print(voter_id, Voter::States::Vote, voter_ballot);)
 				pictureVotes += voter_ballot.picture;
 				statueVotes += voter_ballot.statue;
 				giftShopVotes += voter_ballot.giftshop;
@@ -48,20 +46,19 @@ void TallyVotes::main() {
 
 				if (waiting == group) {
 					groupNo++;
-					tour = {(giftShopVotes >= pictureVotes &&
-							 giftShopVotes >= statueVotes)
-								? GiftShop
-							: (pictureVotes >= statueVotes) ? Picture
-															: Statue,
-							groupNo};
-					PRINT(
-						printer.print(voter_id, Voter::States::Complete, tour);)
+					tour = {
+						(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
+							? GiftShop
+						: (pictureVotes >= statueVotes) ? Picture
+														: Statue,
+						groupNo};
+					PRINT(printer.print(voter_id, Voter::States::Complete, tour);)
 					pictureVotes = statueVotes = giftShopVotes = 0;
 
 					for (unsigned int i = 0; i < group; i++) {
 						waiting--;
-						unsigned int cur_id = bench.front();
-						printer.print(cur_id, Voter::States::Unblock, waiting);
+						unsigned int cur_id __attribute__((unused)) = bench.front();
+						PRINT(printer.print(cur_id, Voter::States::Unblock, waiting);)
 						bench.signalBlock();
 					}
 				}
