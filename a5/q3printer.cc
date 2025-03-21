@@ -8,11 +8,9 @@ Printer::Printer(unsigned int voters) : numVoters(voters) {
 		tours[i] = new unsigned int[3];
 		tours[i][0] = tours[i][1] = tours[i][2] = 0;
 	}
-	PRINT(cout << "V0";
-		  for (unsigned int i = 1; i < voters; i++) cout << "\tV" << i;
+	PRINT(cout << "V0"; for (unsigned int i = 1; i < voters; i++) cout << "\tV" << i;
 		  cout << "\n*******";
-		  for (unsigned int i = 1; i < voters; i++) cout << "\t*******";
-		  cout << endl;)
+		  for (unsigned int i = 1; i < voters; i++) cout << "\t*******"; cout << endl;)
 }
 
 Printer::~Printer() {
@@ -22,8 +20,7 @@ Printer::~Printer() {
 		delete[] tours[i];
 	}
 	delete[] tours;
-	PRINT(cout << "*****************" << endl;
-		  cout << "All tours ended" << endl;)
+	PRINT(cout << "*****************" << endl; cout << "All tours ended" << endl;)
 }
 
 void Printer::flush() {
@@ -61,15 +58,13 @@ void Printer::flush() {
 					break;
 				case PrinterEntry::BALLOT:
 					cout << " " << buffer[i].ballot.picture << ","
-						 << buffer[i].ballot.statue << ","
-						 << buffer[i].ballot.giftshop;
+						 << buffer[i].ballot.statue << "," << buffer[i].ballot.giftshop;
 					break;
 				case PrinterEntry::BLOCKED:
 					cout << " " << buffer[i].numBlocked;
 					break;
 				case PrinterEntry::BLOCKED_GROUP:
-					cout << " " << buffer[i].numBlocked2 << " "
-						 << buffer[i].group;
+					cout << " " << buffer[i].numBlocked2 << " " << buffer[i].group;
 					break;
 				default:
 					break;
@@ -87,29 +82,26 @@ void Printer::print(unsigned int id, Voter::States state) {
 	buffer[id] = {true, state, {}, PrinterEntry::NONE};
 }
 
-void Printer::print(unsigned int id, Voter::States state,
-					TallyVotes::Tour tour) {
+void Printer::print(unsigned int id, Voter::States state, TallyVotes::Tour tour) {
 	if (buffer[id].active) flush();
 	buffer[id] = {true, state, {}, PrinterEntry::TOUR};
 	buffer[id].tour = tour;
 }
 
-void Printer::print(unsigned int id, Voter::States state,
-					TallyVotes::Ballot vote) {
+void Printer::print(unsigned int id, Voter::States state, TallyVotes::Ballot vote) {
 	if (buffer[id].active) flush();
 	buffer[id] = {true, state, {}, PrinterEntry::BALLOT};
 	buffer[id].ballot = vote;
 }
 
-void Printer::print(unsigned int id, Voter::States state,
-					unsigned int numBlocked) {
+void Printer::print(unsigned int id, Voter::States state, unsigned int numBlocked) {
 	if (buffer[id].active) flush();
 	buffer[id] = {true, state, {}, PrinterEntry::BLOCKED};
 	buffer[id].numBlocked = numBlocked;
 }
 
-void Printer::print(unsigned int id, Voter::States state,
-					unsigned int numBlocked, unsigned int group) {
+void Printer::print(unsigned int id, Voter::States state, unsigned int numBlocked,
+					unsigned int group) {
 	if (buffer[id].active) flush();
 	buffer[id] = {true, state, {}, PrinterEntry::BLOCKED_GROUP};
 	buffer[id].numBlocked2 = numBlocked;

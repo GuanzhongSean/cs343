@@ -50,8 +50,8 @@ _Cormonitor TallyVotes : public uBarrier {
 
 	// common declarations
    private:
-	unsigned int voters, waiting, groupNo, pictureVotes, statueVotes,
-		giftShopVotes, group;
+	unsigned int voters, waiting, groupNo, pictureVotes, statueVotes, giftShopVotes,
+		group;
 	TourKind tour_kind;
 	Printer &printer;
 };

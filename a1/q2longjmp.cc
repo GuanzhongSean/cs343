@@ -15,8 +15,11 @@ using namespace std;
 #define PRINT(stmt) stmt
 #endif	// NOOUTPUT
 
-intmax_t eperiod = 100, excepts = 0, calls = 0, dtors = 0, depth = 0; // counters
-PRINT( struct T { ~T() { dtors += 1; } }; )
+intmax_t eperiod = 100, excepts = 0, calls = 0, dtors = 0, depth = 0;  // counters
+PRINT( struct T { ~T() { dtors += 1;
+}
+}
+; )
 
 jmp_buf env[MAXDEPTH];
 
@@ -33,8 +36,7 @@ long int Ackermann(long int m, long int n, long int depth) {
 		if (setjmp(env[depth + 1]) == 0) {
 			return Ackermann(m - 1, 1, depth + 1);
 		} else {
-			PRINT(cout << " depth " << depth << " E1 " << m << " " << n
-					   << " |");
+			PRINT(cout << " depth " << depth << " E1 " << m << " " << n << " |");
 			if (rand() % eperiod <= 3) {
 				PRINT(T t;) excepts += 1;
 				longjmp(env[depth], 1);
@@ -45,8 +47,7 @@ long int Ackermann(long int m, long int n, long int depth) {
 		if (setjmp(env[depth + 1]) == 0) {
 			return Ackermann(m - 1, Ackermann(m, n - 1, depth + 1), depth + 1);
 		} else {
-			PRINT(cout << " depth " << depth << " E2 " << m << " " << n
-					   << " |");
+			PRINT(cout << " depth " << depth << " E2 " << m << " " << n << " |");
 			if (rand() % eperiod == 0) {
 				PRINT(T t;) excepts += 1;
 				longjmp(env[depth], 1);
@@ -108,13 +109,13 @@ int main(int argc, char* argv[]) {
 
 	srand(seed);  // seed random number
 	if (setjmp(env[0]) == 0) {
-		PRINT(cout << "Arguments " << m << " " << n << " " << seed << " "
-				   << eperiod << endl);
+		PRINT(cout << "Arguments " << m << " " << n << " " << seed << " " << eperiod
+				   << endl);
 		long int val = Ackermann(m, n, 0);
 		PRINT(cout << "Ackermann " << val << endl);
 	} else {  // replace
 		PRINT(cout << "E3" << endl);
 	}
-	cout << "calls " << calls << " exceptions " << excepts << " destructors "
-		 << dtors << endl;
+	cout << "calls " << calls << " exceptions " << excepts << " destructors " << dtors
+		 << endl;
 }

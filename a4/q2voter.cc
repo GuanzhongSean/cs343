@@ -12,8 +12,7 @@ void Voter::main() {
 		PRINT(printer.print(id, Start);)
 		try {
 			yield(prng() % 5);
-			TallyVotes::Tour tour __attribute__((unused)) =
-				voteTallier.vote(id, cast());
+			TallyVotes::Tour tour __attribute__((unused)) = voteTallier.vote(id, cast());
 			yield(prng() % 5);
 			PRINT(printer.print(id, Going, tour);)
 		} catch (TallyVotes::Failed &) {

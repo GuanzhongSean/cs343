@@ -26,8 +26,7 @@ void processLists(istream& input, ostream& output, unsigned int depth) {
 		input >> count;
 		if (input.eof()) break;
 		if (input.fail()) {
-			cerr << "Error! Could not read the number of values in the list."
-				 << endl;
+			cerr << "Error! Could not read the number of values in the list." << endl;
 			exit(1);
 		}
 		if (count < 0) {
@@ -42,8 +41,8 @@ void processLists(istream& input, ostream& output, unsigned int depth) {
 		for (int i = 0; i < count; i++) {
 			input >> values[i];
 			if (input.fail()) {
-				cerr << "Error! Could not read value " << i + 1
-					 << " in the list." << endl;
+				cerr << "Error! Could not read value " << i + 1 << " in the list."
+					 << endl;
 				exit(1);
 			}
 		}
@@ -119,8 +118,7 @@ int main(int argc, char* argv[]) {
 			// Measure sort time
 			uTime start = uClock::currTime();
 			quicksort(values, 0, size - 1, depth);
-			cout << "Sort time " << uClock::currTime() - start << " sec."
-				 << endl;
+			cout << "Sort time " << uClock::currTime() - start << " sec." << endl;
 
 			delete[] values;
 		} else {
@@ -132,8 +130,8 @@ int main(int argc, char* argv[]) {
 				try {
 					output = new ofstream(argv[2]);
 				} catch (...) {
-					cerr << "Error! Could not open sorted output file \""
-						 << argv[2] << "\"" << endl;
+					cerr << "Error! Could not open sorted output file \"" << argv[2]
+						 << "\"" << endl;
 					exit(1);
 				}
 			}

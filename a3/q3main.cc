@@ -44,8 +44,8 @@ int main(int argc, char* argv[]) {
 				delay = convert(argv[5]);
 			}
 		}
-		if (cons <= 0 || prods <= 0 || produce <= 0 || size <= 0 ||
-			delay <= 0 || processors <= 0) {
+		if (cons <= 0 || prods <= 0 || produce <= 0 || size <= 0 || delay <= 0 ||
+			processors <= 0) {
 			throw cmd_error();
 		}
 	} catch (...) {
@@ -82,8 +82,9 @@ int main(int argc, char* argv[]) {
 
 	char* nosummary = getenv("NOSUMMARY");
 	if (!nosummary) {
-		cerr << endl << "Total Producer/Consumer blocks in insert/remove: "
-			 << buffer.blocks() << endl;
+		cerr << endl
+			 << "Total Producer/Consumer blocks in insert/remove: " << buffer.blocks()
+			 << endl;
 		malloc_stats();
 	}
 

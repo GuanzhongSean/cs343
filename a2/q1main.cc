@@ -18,7 +18,8 @@ int main(int argc, char *argv[]) {
 	int i, filterIndex, inputIndex = -1, outputIndex = -1;
 	struct cmd_error {};
 
-	for (i = 1; i < argc && argv[i][0] == '-'; i++) {}
+	for (i = 1; i < argc && argv[i][0] == '-'; i++) {
+	}
 	filterIndex = i - 1;
 	if (i < argc) {
 		inputIndex = i;
@@ -75,10 +76,8 @@ int main(int argc, char *argv[]) {
 				throw cmd_error{};
 			}
 		} catch (...) {
-			cerr << "Error: invalid command-line option \"" << argv[i] << "\"."
-				 << endl
-				 << "Assume all filter options are correctly specified."
-				 << endl;
+			cerr << "Error: invalid command-line option \"" << argv[i] << "\"." << endl
+				 << "Assume all filter options are correctly specified." << endl;
 			exit(1);
 		}
 	}

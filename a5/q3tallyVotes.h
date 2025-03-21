@@ -58,8 +58,8 @@ _Task TallyVotes {
 
 	// common declarations
    private:
-	unsigned int voters, waiting, groupNo, pictureVotes, statueVotes,
-		giftShopVotes, group;
+	unsigned int voters, waiting, groupNo, pictureVotes, statueVotes, giftShopVotes,
+		group;
 	Tour tour;
 	Ballot voter_ballot;
 	Printer & printer;

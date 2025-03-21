@@ -1,4 +1,4 @@
-OPT := # -O2
+OPT := -O2
 VIMPL := EXT
 OUTPUT := OUTPUT
 BCHECK := BARGINGCHECK
@@ -53,6 +53,11 @@ clean :						# remove files that can be regenerated
 
 test:
 	python q3test.py
+
+q3b: clean
+	${MAKE} ${EXEC} VIMPL="${VIMPL}" OUTPUT=NOOUTPUT BCHECK=NOBARGINGCHECK
+	/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./vote 100 10 50000 1003
+	/usr/bin/time -f "%Uu %Ss %Er %Mkb" ./vote 100 10 50000 1003 2
 
 submit:
 	submit cs343 5 .

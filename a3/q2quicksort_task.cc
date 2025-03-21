@@ -18,14 +18,12 @@ _Task QuicksortTask {
 	}
 
    public:
-	QuicksortTask(T values[], unsigned int low, unsigned int high,
-				  unsigned int depth)
+	QuicksortTask(T values[], unsigned int low, unsigned int high, unsigned int depth)
 		: values(values), low(low), high(high), depth(depth) {}
 };
 
 template <typename T>
-void quicksort(T values[], unsigned int low, unsigned int high,
-			   unsigned int depth) {
+void quicksort(T values[], unsigned int low, unsigned int high, unsigned int depth) {
 	if (depth > 0) {
 		QuicksortTask task{values, low, high, depth};
 	} else {

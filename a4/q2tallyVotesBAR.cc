@@ -1,8 +1,7 @@
 #include "q2printer.h"
 #include "q2tallyVotes.h"
 
-TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
-					   Printer& printer)
+TallyVotes::TallyVotes(unsigned int voters, unsigned int group, Printer& printer)
 	: uBarrier(group),
 	  voters(voters),
 	  waiting(0),
@@ -32,11 +31,10 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	} else {
 		uBarrier::block();
 		groupNo++;
-		tour_kind =
-			(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
-				? GiftShop
-			: (pictureVotes >= statueVotes) ? Picture
-											: Statue;
+		tour_kind = (giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
+						? GiftShop
+					: (pictureVotes >= statueVotes) ? Picture
+													: Statue;
 		PRINT(printer.print(id, Voter::States::Complete, Tour{tour_kind, groupNo});)
 		pictureVotes = statueVotes = giftShopVotes = 0;
 	}

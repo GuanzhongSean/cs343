@@ -39,7 +39,7 @@ void Player::main() {
 	try {
 		while (true) {
 			_Enable;
-			if (!active) { // Check if player is still active
+			if (!active) {	// Check if player is still active
 				if (&resumer() == left) {
 					right->play(deck);
 				} else {

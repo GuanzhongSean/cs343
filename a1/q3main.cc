@@ -18,8 +18,8 @@ void processLine(const std::string &line, FloatConstantHex &coroutine) {
 			coroutine.next(FloatConstantHex::EOT);
 		}
 	} catch (coroutine.FloatConstantHex::Match &match) {
-		std::cout << "\"" << line << "\" : \"" << line.substr(0, i)
-				  << "\" yes, value " << std::setprecision(16) << match.value;
+		std::cout << "\"" << line << "\" : \"" << line.substr(0, i) << "\" yes, value "
+				  << std::setprecision(16) << match.value;
 	} catch (coroutine.FloatConstantHex::Error &) {
 		i++;
 		std::cout << "\"" << line << "\" : \"" << line.substr(0, i) << "\" no";

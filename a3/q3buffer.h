@@ -28,12 +28,7 @@ class BoundedBuffer {
    public:
 	_Exception Poison{};
 	BoundedBuffer(const unsigned int size = 10)
-		: size(size),
-		  front(0),
-		  rear(0),
-		  count(0),
-		  blockCount(0),
-		  poisoned(false) {
+		: size(size), front(0), rear(0), count(0), blockCount(0), poisoned(false) {
 		buffer = new T[size];
 	}
 	~BoundedBuffer() {

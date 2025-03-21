@@ -2,8 +2,7 @@
 #include "q3printer.h"
 #include "q3tallyVotes.h"
 
-TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
-					   Printer &printer)
+TallyVotes::TallyVotes(unsigned int voters, unsigned int group, Printer &printer)
 	: groupFull(false),
 	  voters(voters),
 	  waiting(0),
@@ -27,10 +26,9 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 
 	if (waiting + 1 == group) {
 		groupNo++;
-		tour = {(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes)
-					? GiftShop
-				: (pictureVotes >= statueVotes) ? Picture
-												: Statue,
+		tour = {(giftShopVotes >= pictureVotes && giftShopVotes >= statueVotes) ? GiftShop
+				: (pictureVotes >= statueVotes)									? Picture
+																				: Statue,
 				groupNo};
 		PRINT(printer.print(id, Voter::States::Complete, tour);)
 		pictureVotes = statueVotes = giftShopVotes = 0;
@@ -38,9 +36,8 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	}
 
 	WAITUNTIL(groupFull || voters < group, waiting++;
-			//   cout << "Voters: " << (groupFull || voters < group) << endl;
-			  PRINT(printer.print(id, Voter::States::Block, waiting)),
-			  waiting--;
+			  //   cout << "Voters: " << (groupFull || voters < group) << endl;
+			  PRINT(printer.print(id, Voter::States::Block, waiting)), waiting--;
 			  PRINT(printer.print(id, Voter::States::Unblock, waiting)));
 	if (waiting == 0) groupFull = false;
 	EXIT();

@@ -6,8 +6,7 @@
 using std::swap;
 
 template <typename T>
-void quicksort(T values[], unsigned int low, unsigned int high,
-			   unsigned int depth);
+void quicksort(T values[], unsigned int low, unsigned int high, unsigned int depth);
 
 template <typename T>
 unsigned int partition(T arr[], unsigned int low, unsigned int high) {

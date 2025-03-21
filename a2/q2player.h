@@ -6,7 +6,7 @@
 #include "q2printer.h"
 
 _Coroutine Player {
-	_Exception Schmilblick {};
+	_Exception Schmilblick{};
 	PRNG & prng;
 	unsigned int id;
 	Printer & printer;

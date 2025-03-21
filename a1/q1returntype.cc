@@ -7,9 +7,15 @@
 
 using namespace std;
 
-struct Ex1 { short int code; };
-struct Ex2 { int code; };
-struct Ex3 { long int code; };
+struct Ex1 {
+	short int code;
+};
+struct Ex2 {
+	int code;
+};
+struct Ex3 {
+	long int code;
+};
 
 using Result = variant<double, Ex1, Ex2, Ex3>;
 
@@ -78,8 +84,7 @@ int main(int argc, char *argv[]) {
 		}  // switch
 	} catch (...) {
 		cerr << "Usage: " << argv[0]
-			 << " [ times > 0 | d [ eperiod > 0 | d [ seed > 0 | d ] ] ]"
-			 << endl;
+			 << " [ times > 0 | d [ eperiod > 0 | d [ seed > 0 | d ] ] ]" << endl;
 		exit(EXIT_FAILURE);
 	}  // try
 	srand(seed);
@@ -105,8 +110,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	cout << "randcnt " << randcnt << endl;
-	cout << "normal result " << rv << " exception results " << ev1 << ' ' << ev2
-		 << ' ' << ev3 << endl;
-	cout << "calls " << rc << " exceptions " << ec1 << ' ' << ec2 << ' ' << ec3
-		 << endl;
+	cout << "normal result " << rv << " exception results " << ev1 << ' ' << ev2 << ' '
+		 << ev3 << endl;
+	cout << "calls " << rc << " exceptions " << ec1 << ' ' << ec2 << ' ' << ec3 << endl;
 }

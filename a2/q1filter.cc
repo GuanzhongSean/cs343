@@ -78,8 +78,8 @@ void WhitespaceFilter::main() {
 						next->put(ch);
 						break;
 					}
-					next->put(' ');	 // collapses into a single space if not
-									 // end-of-line
+					next->put(' ');			// collapses into a single space if not
+											// end-of-line
 					while (!isspace(ch)) {	// output the next word
 						next->put(ch);
 						suspend();
