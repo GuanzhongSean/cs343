@@ -5,7 +5,7 @@ BCHECK := BARGINGCHECK
 
 CXX = u++ # compiler
 CXXFLAGS = -quiet  -g -multi -Wall -Wextra -MMD ${OPT} -D"${VIMPL}"\
-		-D"${OUTPUT}" -D"${BCHECK}" -Wno-unused-parameter # compiler flags
+		-D"${OUTPUT}" -D"${BCHECK}" -Wno-unused-parameter -Wno-comment # compiler flags
 ifeq ("${OUTPUT}","NOOUTPUT")
 	CXXFLAGS += -O2 -nodebug
 endif

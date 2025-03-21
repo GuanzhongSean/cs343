@@ -9,11 +9,11 @@ TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
 	  pictureVotes(0),
 	  statueVotes(0),
 	  giftShopVotes(0),
-	  groupSize(group),
+	  group(group),
 	  printer(printer) {}
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
-	if (voters < groupSize) _Throw Failed();
+	if (voters < group) _Throw Failed();
 
 	PRINT(printer.print(id, Voter::States::Vote, ballot);)
 	pictureVotes += ballot.picture;
@@ -21,7 +21,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	giftShopVotes += ballot.giftshop;
 	waiting++;
 
-	if (waiting < groupSize) {
+	if (waiting < group) {
 		PRINT(printer.print(id, Voter::States::Block, waiting);)
 		bench.wait();
 		waiting--;
@@ -38,13 +38,13 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		pictureVotes = statueVotes = giftShopVotes = 0;
 	}
 	bench.signal();
-	if (voters < groupSize) _Throw Failed();
+	if (voters < group) _Throw Failed();
 	return tour;
 }
 
 void TallyVotes::done() {
 	voters--;
-	if (voters < groupSize && !bench.empty()) {
+	if (voters < group && !bench.empty()) {
 		bench.signal();
 	}
 }

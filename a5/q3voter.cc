@@ -21,11 +21,10 @@ void Voter::main() {
 			break;
 		}
 	}
-#if !defined(TASK)
+#if defined(TASK)
+	voteTallier.done(id);
+#else
 	voteTallier.done();
 #endif
 	PRINT(printer.print(id, Terminated);)
-#if defined(TASK)
-	voteTallier.done(id);
-#endif
 }

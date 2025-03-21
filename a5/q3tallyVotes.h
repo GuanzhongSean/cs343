@@ -5,14 +5,15 @@ class Printer;
 
 #if defined(EXT)  // external scheduling monitor solution
 _Monitor TallyVotes {
-#elif defined(INT)	 // internal scheduling monitor solution
+#elif defined(INT)	// internal scheduling monitor solution
 _Monitor TallyVotes {
 	uCondition bench;
+
 #elif defined(INTB)	 // internal scheduling monitor solution with barging
 #include "BargingCheckVote.h"
 
 _Monitor TallyVotes {
-    bool groupFull;
+	bool groupFull;
 	unsigned int barging, ticket_counter, serving_ticket;
 	uCondition bench;
 	void wait();	   // barging version of wait
@@ -20,10 +21,18 @@ _Monitor TallyVotes {
 	BCHECK_DECL;
 
 #elif defined(AUTO)	 // automatic-signal monitor solution
+#include "AutomaticSignal.h"
+
 _Monitor TallyVotes {
+	bool groupFull;
+	AUTOMATIC_SIGNAL;
 
 #elif defined(TASK)	 // internal/external scheduling task solution
 _Task TallyVotes {
+	unsigned int voter_id;
+	uCondition bench;
+	void main();
+
 #else
 #error unsupported voter type
 #endif
@@ -50,8 +59,9 @@ _Task TallyVotes {
 	// common declarations
    private:
 	unsigned int voters, waiting, groupNo, pictureVotes, statueVotes,
-		giftShopVotes, groupSize;
+		giftShopVotes, group;
 	Tour tour;
+	Ballot voter_ballot;
 	Printer & printer;
 };
 

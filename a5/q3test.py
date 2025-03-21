@@ -4,8 +4,7 @@ import os
 
 VOTE_EXE = "./vote"
 REFERENCE_EXE = {"INTB": "./voteINTB", "AUTO": "./voteAUTO", "TASK": "./voteTASK"}
-VIMPL = ["EXT", "INT", "INTB"]
-# VIMPL = ["EXT", "INT", "INTB", "AUTO", "TASK"]
+VIMPL = ["EXT", "INT", "INTB", "AUTO", "TASK"]
 
 
 def write_to_file(content, filename):

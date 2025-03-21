@@ -13,7 +13,7 @@ TallyVotes::TallyVotes(unsigned int voters, unsigned int group,
 	  pictureVotes(0),
 	  statueVotes(0),
 	  giftShopVotes(0),
-	  groupSize(group),
+	  group(group),
 	  printer(printer) {}
 
 void TallyVotes::wait() {
@@ -34,15 +34,15 @@ void TallyVotes::signalAll() {				// also useful
 }
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
-	VOTER_ENTER(groupSize);
-	if (voters < groupSize) _Throw Failed();
+	VOTER_ENTER(group);
+	if (voters < group) _Throw Failed();
 	unsigned int my_ticket = ++ticket_counter;
 	while (my_ticket > serving_ticket) {
 		barging++;
 		PRINT(printer.print(id, Voter::Barging, barging, groupNo);)
 		wait();
 		barging--;
-		if (voters < groupSize) _Throw Failed();
+		if (voters < group) _Throw Failed();
 	}
 
 	PRINT(printer.print(id, Voter::States::Vote, ballot);)
@@ -51,7 +51,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 	giftShopVotes += ballot.giftshop;
 	waiting++;
 
-	if (waiting < groupSize) {
+	if (waiting < group) {
 		PRINT(printer.print(id, Voter::States::Block, waiting);)
 		wait();
 		waiting--;
@@ -69,19 +69,19 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 		groupFull = true;
 		signalAll();
 	}
-	if (voters < groupSize && !groupFull) _Throw Failed();
+	if (voters < group && !groupFull) _Throw Failed();
 	if (waiting == 0) {
 		groupFull = false;
-		serving_ticket += groupSize;
+		serving_ticket += group;
 		signalAll();
 	}
-	VOTER_LEAVE(groupSize);
+	VOTER_LEAVE(group);
 	return tour;
 }
 
 void TallyVotes::done() {
 	voters--;
-	if (voters < groupSize) {
+	if (voters < group) {
 		signalAll();
 	}
 }
