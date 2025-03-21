@@ -1,0 +1,32 @@
+A5Q3b
+
+(a) Experimental Results
+
+Single Processor Execution (Parameters: 100 10 50000 1003)
+| Implementation | User Time (s) | System Time (s) | Real Time (s) | Memory (kb) |
+| EXT            | 2.00          | 0.00            | 1.99          | 33468       |
+| INT            | 1.98          | 0.00            | 1.98          | 29396       |
+| INTB           | 10.26         | 0.04            | 10.28         | 29516       |
+| AUTO           | 4.43          | 0.04            | 4.47          | 33288       |
+| TASK           | 2.69          | 0.02            | 2.70          | 29408       |
+
+Dual Processor Execution (Parameters: 100 10 50000 1003 2)
+| Implementation | User Time (s) | System Time (s) | Real Time (s) | Memory (kb) |
+| EXT            | 74.01         | 0.20            | 37.06         | 29560       |
+| INT            | 70.56         | 0.16            | 35.31         | 35276       |
+| INTB           | 282.38        | 0.59            | 141.27        | 29612       |
+| AUTO           | 173.44        | 0.17            | 86.67         | 29592       |
+| TASK           | 102.57        | 0.15            | 51.28         | 29616       |
+
+(b) Performance Differences
+- INT was the fastest implementation with the lowest execution time (1.98s).
+- EXT and TASK followed closely behind with similar performance.
+- AUTO performed worse than EXT and INT, likely due to the additional synchronization overhead from automatic signaling.
+- INTB had the worst performance (10.28s), which can be attributed to the barging prevention mechanisms introducing extra overhead.
+
+(b) Performance Analysis on Kernel Numbers
+- All implementations saw a significant increase in user time due to the overhead of managing concurrent execution.
+- EXT and INT remained the most efficient, completing in 37.06s and 35.31s, respectively.
+- INTB performed extremely poorly (141.27s), highlighting that barging prevention negatively affects scalability.
+- AUTO was also slow (86.67s), reinforcing that automatic signaling introduces additional delays.
+- TASK showed decent performance (51.28s), benefiting from its task-based approach but still slower than INT and EXT.
