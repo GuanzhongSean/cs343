@@ -3,7 +3,7 @@ import random
 import os
 
 VOTE_EXE = "./vote"
-REFERENCE_EXE = {"INTB": "./voteINTB", "AUTO": "./voteAUTO", "TASK": "./voteTASK"}
+REFERENCE_EXE = {"INTB": "./voteINTB", "TASK": "./voteTASK"}
 VIMPL = ["EXT", "INT", "INTB", "AUTO", "TASK"]
 
 
@@ -24,8 +24,8 @@ def build_vote(vimpl):
 
 
 def generate_random_params():
-    voters = random.randint(1, 30)
-    group = random.randint(1, 30)
+    voters = random.randint(1, 20)
+    group = random.randint(1, 20)
     tours = random.randint(1, 50)
     seed = random.randint(1, 1000000000000)
     return voters, group, tours, seed

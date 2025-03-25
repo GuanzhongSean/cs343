@@ -12,7 +12,6 @@ TallyVotes::TallyVotes(unsigned int voters, unsigned int group, Printer &printer
 	  printer(printer) {}
 
 TallyVotes::Tour TallyVotes::vote(unsigned int id, TallyVotes::Ballot ballot) {
-	if (voters < group) _Throw Failed();
 	voter_id = id;
 	voter_ballot = ballot;
 	bench.wait(voter_id);
@@ -32,11 +31,18 @@ void TallyVotes::main() {
 				voters--;
 				if (voters < group) {
 					while (!bench.empty()) {
+						waiting--;
+						unsigned int cur_id __attribute__((unused)) = bench.front();
 						bench.signalBlock();
+						PRINT(printer.print(cur_id, Voter::States::Unblock, waiting);)
 					}
 				}
 			}
 			or _Accept(vote) {
+				if (voters < group) {
+					bench.signalBlock();
+					continue;
+				}
 				PRINT(printer.print(voter_id, Voter::States::Vote, voter_ballot);)
 				pictureVotes += voter_ballot.picture;
 				statueVotes += voter_ballot.statue;
