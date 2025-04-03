@@ -2,7 +2,6 @@
 #define Q3PRINTER_H
 
 #include <iostream>
-#include <vector>
 
 #include "q3voter.h"
 

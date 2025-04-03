@@ -2,7 +2,6 @@
 #define Q2PRINTER_H
 
 #include <iostream>
-#include <vector>
 
 #include "q2voter.h"
 

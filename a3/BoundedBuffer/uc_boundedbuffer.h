@@ -5,7 +5,6 @@
  * January, 2012
  */
 
-#include <uC++.h>
 #include <vector>
 
 template<typename T> class BoundedBuffer {
