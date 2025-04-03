@@ -11,6 +11,6 @@ struct ConfigParms {
 	unsigned int groupoffDelay;			// length of time between initializing gift cards
 	unsigned int parentalDelay;			// length of time between cash deposits
 	unsigned int numCouriers;			// number of couriers in the pool
-};	// ConfigParms
+};										// ConfigParms
 
 void processConfigFile(const char* configFile, ConfigParms& cparms);

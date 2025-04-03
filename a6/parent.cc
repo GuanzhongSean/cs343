@@ -20,7 +20,7 @@ void Parent::main() {
 			int amount = prng(1, 3);   // amount of money that will be given to student
 			bank.deposit(id, amount);  // transfer gift
 			prt.print(Printer::Kind::Parent, 'D', id, amount);	// print state info
-		}  // _Accept
+		}														// _Accept
 	}
 
 	prt.print(Printer::Kind::Parent, 'F');	// print finish state

@@ -1,7 +1,7 @@
 #ifdef __cforall
 #include <fstream.hfa>
-#include <mutex_stmt.hfa>
 #include <locks.hfa>
+#include <mutex_stmt.hfa>
 #define __COND_LOCK_T__ condition_variable(owner_lock)
 #define __EMPTY__(C) (empty(C))
 #else

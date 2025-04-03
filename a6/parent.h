@@ -5,8 +5,8 @@
 #include "printer.h"
 
 _Task Parent {
-	Printer & prt;				 // printer to print states info
-	Bank & bank;				 // bank to endow gifts
+	Printer& prt;				 // printer to print states info
+	Bank& bank;					 // bank to endow gifts
 	unsigned int numStudents;	 // number of students
 	unsigned int parentalDelay;	 // time to yield
 

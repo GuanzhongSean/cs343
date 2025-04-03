@@ -62,7 +62,7 @@ _Task TallyVotes {
 		group;
 	Tour tour;
 	Ballot voter_ballot;
-	Printer & printer;
+	Printer& printer;
 };
 
 #endif	// Q3TALLYVOTES_H

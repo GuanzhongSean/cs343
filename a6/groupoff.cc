@@ -55,7 +55,7 @@ void Groupoff::main() {
 					  sodaCost);  // print that we assigned a cost
 			giftCards.erase(giftCards.begin() +
 							random_index);	// remove it from the vector
-		}  // _Accept
+		}									// _Accept
 	}
 	prt.print(Printer::Kind::Groupoff, 'F');  // finished
 }

@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 				"[ array size (> 0) ] ] ]"
 			 << endl;
 		exit(1);
-	}  // try
+	}						  // try
 	uProcessor p[tasks - 1];  // add CPUs (start with one)
 	{
 		Worker workers[tasks];	// add threads

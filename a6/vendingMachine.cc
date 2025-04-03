@@ -82,7 +82,7 @@ void VendingMachine::main() {
 			}
 
 			cond.signalBlock();	 // let buy raise the exception
-		}  // _Accept
+		}						 // _Accept
 	}
 
 	prt.print(Printer::Kind::Vending, id, 'F');	 // finished

@@ -59,13 +59,13 @@ int main(int argc, char* argv[]) {
 			strbuf += to_string(C) + '\t' + to_string(C) + '\t' + to_string(C) + '\t' +
 					  to_string(C) + '\t';
 			if (trick == 0) cout << strbuf;
-		}  // for
+		}				 // for
 		strbuf.clear();	 // reset string
 #elif defined(STRSTREAM)
 		for (int s = 0; s < size; s += 1) {
 			ssbuf << C << '\t' << C << '\t' << C << '\t' << C << '\t';
 			if (trick == 0) cout << ssbuf.str();
-		}  // for
+		}				 // for
 		ssbuf.seekp(0);	 // reset stream
 #else
 #error unknown buffering style

@@ -9,7 +9,7 @@ using std::endl;
 using std::ostream;
 
 _Coroutine Writer : public Filter {
-	ostream & out;
+	ostream& out;
 	unsigned int count = 0;
 	void main();
 

@@ -14,12 +14,12 @@ _Task VendingMachine {
 	static const int numFlavours = 4;			  // number of flavours
 	enum RaiseType { none, funds, stock, free };  // enum type of raise
 
-	Printer & prt;			  // printer to print state info
-	NameServer & nameServer;  // nameServer to register VM
-	unsigned int id;		  // id for identification
-	unsigned int sodaCost;	  // MSRP prive for a bottle of soda
-	bool isRestocking;		  // true if the truck is restocking the vending machine
-	RaiseType raiseType;	  // flag variable to know when to raise Funds or Stock
+	Printer &prt;			 // printer to print state info
+	NameServer &nameServer;	 // nameServer to register VM
+	unsigned int id;		 // id for identification
+	unsigned int sodaCost;	 // MSRP prive for a bottle of soda
+	bool isRestocking;		 // true if the truck is restocking the vending machine
+	RaiseType raiseType;	 // flag variable to know when to raise Funds or Stock
 	unsigned int
 		stocks[numFlavours];  // an array containing the amount of each kind of soda
 	uCondition cond;		  // lock to return control from buy

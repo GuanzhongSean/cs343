@@ -6,8 +6,8 @@
 
 _Task Voter {
 	unsigned int id, tours;
-	TallyVotes & voteTallier;
-	Printer & printer;
+	TallyVotes& voteTallier;
+	Printer& printer;
 
 	void main();
 	TallyVotes::Ballot cast() __attribute__((warn_unused_result)) {	 // cast 3-way vote

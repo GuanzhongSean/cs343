@@ -10,7 +10,7 @@ static bool comments(ifstream& in, string& name) {
 		if (in.fail()) return true;
 		if (name.substr(0, 1) != "#") break;
 		in.ignore(numeric_limits<int>::max(), '\n');  // ignore remainder of line
-	}  // for
+	}												  // for
 	return false;
 }  // comments
 
@@ -43,8 +43,8 @@ void processConfigFile(const char* configFile, ConfigParms& cparms) {
 		for (cnt = 0; cnt < Parmnum;
 			 cnt += 1) {					// parameter names can appear in any order
 			if (comments(in, name)) break;	// eof ?
-			for (posn = 0; posn < Parmnum && name != parms[posn].name;
-				 posn += 1);			  // linear search
+			for (posn = 0; posn < Parmnum && name != parms[posn].name; posn += 1)
+				;						  // linear search
 			if (posn == Parmnum) break;	  // configuration not found ?
 			if (parms[posn].used) break;  // duplicate configuration ?
 			in >> value;
@@ -63,7 +63,7 @@ void processConfigFile(const char* configFile, ConfigParms& cparms) {
 		if (numOfParm != Parmnum) {
 			cerr << "Error: file \"" << configFile << "\" is corrupt." << endl;
 			exit(EXIT_FAILURE);
-		}  // if
+		}							// if
 		if (!comments(in, name)) {	// ! eof ?
 			cerr << "Error: file \"" << configFile << "\" has extraneous data." << endl;
 			exit(EXIT_FAILURE);

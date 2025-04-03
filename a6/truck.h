@@ -11,9 +11,9 @@ _Task Truck;  // pre-declare
 
 _Task Truck {
 	static const int numFlavours = 4;  // number of flavours
-	Printer & prt;					   // printer to print state info
-	NameServer & nameServer;  // nameServer to obtain the location of each vending machine
-	BottlingPlant & plant;	  // plant to get shipment
+	Printer& prt;					   // printer to print state info
+	NameServer& nameServer;	 // nameServer to obtain the location of each vending machine
+	BottlingPlant& plant;	 // plant to get shipment
 	unsigned int numVendingMachines;  // number of vending machines
 	unsigned int maxStockPerFlavour;  // max number of bottles of each flavour
 	void main();

@@ -7,9 +7,9 @@
 
 _Coroutine Player {
 	_Exception Schmilblick{};
-	PRNG & prng;
+	PRNG &prng;
 	unsigned int id;
-	Printer & printer;
+	Printer &printer;
 	Player *left, *right;
 	unsigned int deck;
 	bool active, drinker;

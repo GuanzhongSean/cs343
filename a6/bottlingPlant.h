@@ -9,8 +9,8 @@ _Task NameServer;
 
 _Task BottlingPlant {
 	static const int numFlavours = 4;	// number of flavours
-	Printer & prt;						// printer to print state info
-	NameServer & nameServer;			// name server to locate vending machine
+	Printer& prt;						// printer to print state info
+	NameServer& nameServer;				// name server to locate vending machine
 	unsigned int numVendingMachines;	// number of vending machines
 	unsigned int maxShippedPerFlavour;	// max num of bottles of each flavour
 	unsigned int maxStockPerFlavour;	// max number of bottles in a vending machine

@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 		cout << "Usage: " << argv[0] << " [ iterations (> 0) [ processors (> 0) ] ]"
 			 << endl;
 		exit(EXIT_FAILURE);	 // TERMINATE!
-	}  // try
+	}						 // try
 
 	uProcessor p[processors - 1];  // create additional kernel threads
 	{ increment t[processors == 1 ? 2 : processors]; }	// wait for tasks to finish

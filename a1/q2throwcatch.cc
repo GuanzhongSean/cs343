@@ -35,7 +35,7 @@ long int Ackermann( long int m, long int n, long int depth ) {
 				PRINT(T t;) excepts += 1;
 				throw E();
 			}  // replace
-		}  // try
+		}	   // try
 		PRINT(cout << " E1X " << m << " " << n << endl);
 	} else {
 		try {
@@ -47,9 +47,9 @@ long int Ackermann( long int m, long int n, long int depth ) {
 				PRINT(T t;) excepts += 1;
 				throw E();
 			}  // replace
-		}  // try
+		}	   // try
 		PRINT(cout << " E2X " << m << " " << n << endl);
-	}  // if
+	}		   // if
 	return 0;  // recover by returning 0
 }
 

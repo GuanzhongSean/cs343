@@ -8,7 +8,7 @@ static void CriticalSection() {
 		if (curr != &uThisTask()) {
 			abort("Interference");
 		}  // check
-	}  // for
+	}	   // for
 }
 
 volatile bool done = false;
@@ -36,8 +36,8 @@ _Task Retract {
 			CriticalSection();		// critical section
 			if (!done) count += 1;	// count while both threads running
 			me = DontWantIn;		// exit protocol
-		}  // for
-		done = true;  // finished first!
+		}							// for
+		done = true;				// finished first!
 		osacquire(cout) << count << endl;
 	}
 };

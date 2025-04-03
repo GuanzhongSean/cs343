@@ -78,7 +78,7 @@ void Student::main() {
 					break;
 				}
 			}  // _Select
-		}  // StartBuying
+		}	   // StartBuying
 	}
 
 	// all drinks purchased, student's desitny is fullfilled

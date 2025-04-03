@@ -6,7 +6,7 @@ _Task NameServer;  // pre-declare
 #include "vendingMachine.h"
 
 _Task NameServer {
-	Printer & prt;
+	Printer& prt;
 	unsigned int numVendingMachines;	// number of vending machines
 	unsigned int numStudents;			// number of students
 	unsigned int numMachineRegistered;	// number of VM registered

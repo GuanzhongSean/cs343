@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 			ev3 += ev.code;
 			ec3 += 1;
 		}  // replace
-	}  // for
+	}	   // for
 	cout << "randcnt " << randcnt << endl;
 	cout << "normal result " << rv << " exception results " << ev1 << ' ' << ev2 << ' '
 		 << ev3 << endl;

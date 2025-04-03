@@ -8,7 +8,7 @@
 using std::istream;
 
 _Coroutine Reader : public Filter {
-	istream & in;
+	istream& in;
 	void main();
 
    public:

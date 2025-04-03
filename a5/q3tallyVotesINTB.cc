@@ -22,7 +22,7 @@ void TallyVotes::wait() {
 			_Accept(vote || done) {	 // accept barging callers
 			}
 			_Else {	 // do not wait if no callers
-			}  // _Accept
+			}		 // _Accept
 		} catch (uMutexFailure::RendezvousFailure &) {
 		}
 	}  // while

@@ -19,7 +19,7 @@ struct SortMessage : public uActor::Message {
 
 template <typename T>
 _Actor QuicksortActor{uActor::Allocation receive(uActor::Message & msg){
-	Case(SortMessage<T>, msg){if (msg_d->low < msg_d->high && msg_d->depth > 0){
+	Case(SortMessage<T>, msg){if (msg_d->low<msg_d->high && msg_d->depth> 0){
 		unsigned int pivotIndex = partition(msg_d->values, msg_d->low, msg_d->high);
 *new QuicksortActor<T>() |
 	*new SortMessage<T>(msg_d->values, msg_d->low, pivotIndex, msg_d->depth - 1);

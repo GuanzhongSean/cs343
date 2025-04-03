@@ -45,14 +45,14 @@ void BottlingPlant::main() {
 			prt.print(
 				Printer::Kind::BottlingPlant,
 				'P');  // shipment got by truck, assuming truck can take infinite amount
-		}  //_Accept
+		}			   //_Accept
 	}
 
 	try {
 		_Accept(getShipment) {}	 // the last getShipement call, wil throw exception
 	} catch (uMutexFailure::RendezvousFailure&) {  // special kind of exception that
 												   // indicates problem on task's thread
-	}  // try
+	}											   // try
 
 	prt.print(Printer::Kind::BottlingPlant, 'F');  // print stopping message
 }
