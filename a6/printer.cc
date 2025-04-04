@@ -53,10 +53,8 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 	// calcu total number of columns, 6 includes parent, groupoff, WATCard office, name
 	// server, truck, bottling plant
 	numInstances = 6 + numStudents + numVendingMachines + numCouriers;
-	// print title of objects with single instance
-	cout << "Parent\tGropoff\tWATOff\tNames\tTruck\tPlant\t";
+	cout << "Parent\tGroupoff\tWATOff\tNames\tTruck\tPlant\t";
 
-	// print title of objects with multiple instances
 	for (unsigned int i = 0; i < numStudents; i += 1) {
 		cout << "Stud" << i << "\t";
 	}
@@ -67,7 +65,7 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 
 	for (unsigned int i = 0; i < numCouriers; i += 1) {
 		cout << "Cour" << i;
-		if (i != numCouriers - 1) {	 // don't print tab at the end of line
+		if (i != numCouriers - 1) {
 			cout << "\t";
 		}
 	}
@@ -87,7 +85,7 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 
 Printer::~Printer() {
 	flush();									// flush all the stored information
-	delete buffer;								// free memory
+	delete[] buffer;							// free memory
 	cout << "***********************" << endl;	// more output at the end
 }
 

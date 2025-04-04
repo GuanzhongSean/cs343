@@ -17,8 +17,8 @@ NameServer::NameServer(Printer &prt, unsigned int numVendingMachines,
 }
 
 NameServer::~NameServer() {
-	delete machines;
-	delete positions;
+	delete[] machines;
+	delete[] positions;
 }
 
 void NameServer::VMregister(VendingMachine *vendingmachine) {

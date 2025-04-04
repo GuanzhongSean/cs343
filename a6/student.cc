@@ -72,13 +72,19 @@ void Student::main() {
 					watcard =
 						cardOffice.create(id, 5);  // recreate a watcard from the office
 				} catch (VendingMachine::Free& fe) {
-					yield(4);
-					prt.print(Printer::Kind::Student, id, 'A', flavour,
-							  (int)card->getBalance());
+					if (prng(2)) {
+						// Watch the ad
+						yield(4);
+						prt.print(Printer::Kind::Student, id, 'A', flavour,
+								  (int)card->getBalance());
+					} else {
+						// Skip the ad
+						prt.print(Printer::Kind::Student, id, 'X');
+					}
 					break;
 				}
 			}  // _Select
-		}	   // StartBuying
+		}  // StartBuying
 	}
 
 	// all drinks purchased, student's desitny is fullfilled

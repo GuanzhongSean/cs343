@@ -15,7 +15,7 @@ WATCardOffice::~WATCardOffice() {
 	for (unsigned i = 0; i < numCouriers; i += 1) {	 // free memory
 		delete courierPool[i];						 // stop a courier
 	}
-	delete courierPool;
+	delete[] courierPool;
 
 	while (!cardList.empty()) {	  // delete remianing jobs
 		delete cardList.front();  // so that the courier task will stop
@@ -51,7 +51,7 @@ void WATCardOffice::Courier::main() {
 
 	while (true) {
 		Job *job = cardOffice.requestWork();  // take next work request
-		if (job == NULL) break;				  // courier is about to be deleted
+		if (!job) break;					  // courier is about to be deleted
 
 		WATCard *card = job->args.card;			 // student's watcard
 		unsigned int sid = job->args.sid;		 // student id
@@ -65,10 +65,11 @@ void WATCardOffice::Courier::main() {
 		if (prng(0, 5) == 0) {
 			job->result.delivery(new Lost());  // inserted exception into the future
 			prt.print(Printer::Kind::Courier, lid, 'L', sid);  // lost WATCard card
+			cardOffice.cardList.remove(card);  // remove the card from the list
+			delete card;					   // delete the card
 		} else {
 			job->result.delivery(card);	 // making the future available
-			prt.print(Printer::Kind::Courier, lid, 'T', sid,
-					  amount);	// complete funds transfer
+			prt.print(Printer::Kind::Courier, lid, 'T', sid, amount);
 		}
 
 		delete job;
@@ -89,7 +90,7 @@ void WATCardOffice::main() {
 				requests.pop_front();
 			}
 
-			for (unsigned i = 0; i < numCouriers; i += 1) {
+			for (unsigned i = 0; i < numCouriers; i++) {
 				// courier is still waiting for the work, should let them through
 				// because requests is empty now, the infinite loop will be terminted
 				_Accept(requestWork);

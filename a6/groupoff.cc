@@ -21,6 +21,7 @@ Groupoff::~Groupoff() {
 WATCard::FWATCard Groupoff::giftCard(unsigned int id) {
 	WATCard::FWATCard w;
 	giftCards.push_back(w);
+	studentIds.push_back(id);
 	return w;
 }
 
@@ -44,18 +45,16 @@ void Groupoff::main() {
 			if (giftCards.size() == 0)
 				break;			   // only do this if there is still value to assign
 			yield(groupoffDelay);  // yield a fixed amount of time
-			int random_index =
-				prng(0, (int)giftCards.size() - 1);	 // choose a random value to assign.
+			int random_index = prng(0, (int)giftCards.size() - 1);
 			WATCard *w = new WATCard();
-			watCards.push_back(
-				w);	 // add pointer of watcard to watCards, in order to free memory later
+			watCards.push_back(w);
 			w->deposit(sodaCost);				  // put some money in the watCard
 			giftCards[random_index].delivery(w);  // dilevery the real value
-			prt.print(Printer::Kind::Groupoff, 'D',
-					  sodaCost);  // print that we assigned a cost
-			giftCards.erase(giftCards.begin() +
-							random_index);	// remove it from the vector
-		}									// _Accept
+			unsigned int studentId = studentIds[random_index];
+			prt.print(Printer::Kind::Groupoff, 'D', studentId, sodaCost);
+			giftCards.erase(giftCards.begin() + random_index);
+			studentIds.erase(studentIds.begin() + random_index);
+		}  // _Accept
 	}
 	prt.print(Printer::Kind::Groupoff, 'F');  // finished
 }

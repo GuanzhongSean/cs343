@@ -16,6 +16,7 @@ _Task Groupoff {
 	unsigned int sodaCost;		 // cost of sode
 	unsigned int groupoffDelay;	 // delay between delivery the real value in the future
 	vector<WATCard::FWATCard> giftCards;  // a list of gift cards
+	vector<unsigned int> studentIds;	// a list of student id
 	vector<WATCard*> watCards;			  // a list of real watcards
 	unsigned int calledUpon;			  // how many times the giftCard routine is called
 	void main();

@@ -78,8 +78,12 @@ void Truck::main() {
 					prt.print(Printer::Kind::Truck, 'U', id, numNotReplenished);
 				}
 
-				prt.print(Printer::Kind::Truck, 'D', id,
-						  totalSodas);	// end delivery to vending machine
+				prt.print(Printer::Kind::Truck, 'D', id, totalSodas);
+
+				if (prng(1, 100) == 1) {
+					prt.print(Printer::Kind::Truck, 'W');  // wait for flat tire fix
+					yield(10);
+				}
 			}
 		}  // _Accept
 	}
