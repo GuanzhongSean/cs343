@@ -47,8 +47,8 @@ void Student::main() {
 			} catch (VendingMachine::Funds& fe) {
 				watcard = cardOffice.transfer(id, 5 + vendingMachine->cost(), card);
 			} catch (VendingMachine::Free& fe) {
-				prt.print(Printer::Kind::Student, id, 'A', flavour, card->getBalance());
-				if (prng(0, 1)) {  // Watch the ad
+				prt.print(Printer::Kind::Student, id, 'A', flavour);
+				if (prng(0, 1) == 0) {	// Watch the ad
 					yield(4);
 				} else {  // Skip the ad
 					prt.print(Printer::Kind::Student, id, 'X');
