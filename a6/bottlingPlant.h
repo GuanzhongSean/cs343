@@ -8,20 +8,25 @@
 _Task NameServer;
 
 _Task BottlingPlant {
-	static const int numFlavours = 4;	// number of flavours
-	Printer& prt;						// printer to print state info
-	NameServer& nameServer;				// name server to locate vending machine
-	unsigned int numVendingMachines;	// number of vending machines
-	unsigned int maxShippedPerFlavour;	// max num of bottles of each flavour
-	unsigned int maxStockPerFlavour;	// max number of bottles in a vending machine
-	unsigned int timeBetweenShipments;	// the length of time between shipment pickups
+	static const int numFlavours = 4;
+	Printer& prt;
+	NameServer& nameServer;
+	unsigned int numVendingMachines;
+	unsigned int maxShippedPerFlavour;
+	unsigned int maxStockPerFlavour;
+	unsigned int timeBetweenShipments;
 	bool timeToShutdown;
-	unsigned int currentStorage;  // current storage per flavour!
+	unsigned int currentStorage;
 	void main();
 
    public:
-	enum Flavours { BlackCherry, Lemon, Mongo, Orange };  // flavours of soda (YOU DEFINE)
-	_Exception Shutdown{};								  // shutdown plant
+	enum Flavours {
+		BlackCherry,
+		ClassicCreamSoda,
+		RockRootBeer,
+		JazzLime
+	};	// flavours of soda
+	_Exception Shutdown{};
 	BottlingPlant(Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
 				  unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
 				  unsigned int timeBetweenShipments);

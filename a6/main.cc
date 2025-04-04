@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 						  configParms.numStudents);
 
 	VendingMachine *machines[configParms.numVendingMachines];
-	for (unsigned int m = 0; m < configParms.numVendingMachines; m += 1) {
+	for (unsigned int m = 0; m < configParms.numVendingMachines; m++) {
 		machines[m] = new VendingMachine(printer, nameServer, m, configParms.sodaCost);
 	}
 
@@ -59,16 +59,16 @@ int main(int argc, char *argv[]) {
 		configParms.timeBetweenShipments);
 
 	Student *students[configParms.numStudents];
-	for (unsigned int s = 0; s < configParms.numStudents; s += 1) {
+	for (unsigned int s = 0; s < configParms.numStudents; s++) {
 		students[s] = new Student(printer, nameServer, cardOffice, groupoff, s,
 								  configParms.maxPurchases);
 	}
 
-	for (unsigned int s = 0; s < configParms.numStudents; s += 1) {
+	for (unsigned int s = 0; s < configParms.numStudents; s++) {
 		delete students[s];
 	}
 	delete plant;
-	for (unsigned int m = 0; m < configParms.numVendingMachines; m += 1) {
+	for (unsigned int m = 0; m < configParms.numVendingMachines; m++) {
 		delete machines[m];
 	}
 

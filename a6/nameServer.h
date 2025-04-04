@@ -2,8 +2,8 @@
 #define __NAME_SERVER_H__
 
 #include "printer.h"
-_Task NameServer;  // pre-declare
-#include "vendingMachine.h"
+
+_Task VendingMachine;
 
 _Task NameServer {
 	Printer& prt;

@@ -8,23 +8,18 @@ VendingMachine::VendingMachine(Printer &prt, NameServer &nameServer, unsigned in
 	  sodaCost(sodaCost),
 	  isRestocking(false),
 	  raiseType(RaiseType::none) {
-	for (int i = 0; i < numFlavours; i += 1) {	// new vending machine is empty
-		stocks[i] = 0;
-	}
-	nameServer.VMregister(this);  // begins by registering with the name server
+	nameServer.VMregister(this);
 }
 
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard &card) {
-	// update communicate variables
 	this->flavour = flavour;
 	this->card = &card;
 
-	cond.wait();  // return transfer to main to decide raise type
+	cond.wait();
 
 	RaiseType rT = raiseType;
-	raiseType = RaiseType::none;  // reset flag variable
-
-	switch (rT) {  // raise the exception if needs
+	raiseType = RaiseType::none;
+	switch (rT) {
 		case (RaiseType::funds):
 			_Throw Funds();
 		case (RaiseType::stock):
@@ -33,7 +28,7 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard &card) {
 			_Throw Free();
 		default:
 			break;
-	}  // switch
+	}
 }
 
 unsigned int *VendingMachine::inventory() {
@@ -52,38 +47,33 @@ unsigned int VendingMachine::getId() {
 
 void VendingMachine::main() {
 	prt.print(Printer::Kind::Vending, id, 'S', sodaCost);
-	for (;;) {
+	while (true) {
 		_Accept(~VendingMachine) {
 			break;
 		}
-		or _Accept(restocked) {	   // cannot accept buy calls during restocking
-			isRestocking = false;  // indicate the restocking is completed
-			prt.print(Printer::Kind::Vending, id, 'R');	 // complete reloading by truck
+		or _Accept(restocked) {
+			isRestocking = false;
+			prt.print(Printer::Kind::Vending, id, 'R');
 		}
 		or _Accept(inventory) {
-			isRestocking = true;  // indicate the vending machine is restocking
-			prt.print(Printer::Kind::Vending, id, 'r');	 // start reloading by truck
+			isRestocking = true;
+			prt.print(Printer::Kind::Vending, id, 'r');
 		}
 		or _When(!isRestocking) _Accept(buy) {
-			if (stocks[flavour] ==
-				0) {  // rasie Stock if the specified soda is unavailable
+			if (stocks[flavour] == 0) {
 				raiseType = RaiseType::stock;
-			} else if (prng(0, 4) ==
-					   0) {	 // 1 in 5 chance the soda is free, raising exception
-				stocks[flavour] -= 1;  // update stocks
+			} else if (prng(0, 4) == 0) {
+				stocks[flavour] -= 1;
 				raiseType = RaiseType::free;
-			} else if (card->getBalance() <
-					   sodaCost) {	// raise Funds if student has insufficient funds
+			} else if (card->getBalance() < sodaCost) {
 				raiseType = RaiseType::funds;
 			} else {
-				stocks[flavour] -= 1;	   // update stocks
-				card->withdraw(sodaCost);  // WATCard is debited by the cost of a soda
+				stocks[flavour] -= 1;
+				card->withdraw(sodaCost);
 				prt.print(Printer::Kind::Vending, id, 'B', flavour, stocks[flavour]);
 			}
-
-			cond.signalBlock();	 // let buy raise the exception
-		}						 // _Accept
+			cond.signalBlock();
+		}
 	}
-
-	prt.print(Printer::Kind::Vending, id, 'F');	 // finished
+	prt.print(Printer::Kind::Vending, id, 'F');
 }

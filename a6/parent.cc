@@ -8,22 +8,20 @@ Parent::Parent(Printer &prt, Bank &bank, unsigned int numStudents,
 
 void Parent::main() {
 	unsigned int total = 0;
-	prt.print(Printer::Kind::Parent, 'S');	// print start state
+	prt.print(Printer::Kind::Parent, 'S');
 
-	for (;;) {
-		_Accept(~Parent) {	// busy waiting for a call to its destructor
+	while (true) {
+		_Accept(~Parent) {
 			break;
 		}
 		_Else {
-			yield(parentalDelay);  // yield before gift transfered
-			unsigned int id =
-				prng(0, numStudents - 1);  // student id who will receive gift
-			int amount = prng(1, 3);   // amount of money that will be given to student
-			bank.deposit(id, amount);  // transfer gift
-			total += amount;		   // update total amount of money
-			prt.print(Printer::Kind::Parent, 'D', id, amount);	// print state info
-		}  // _Accept
+			yield(parentalDelay);
+			unsigned int id = prng(0, numStudents - 1);
+			int amount = prng(1, 3);
+			bank.deposit(id, amount);
+			total += amount;
+			prt.print(Printer::Kind::Parent, 'D', id, amount);
+		}
 	}
-
-	prt.print(Printer::Kind::Parent, 'F', total);  // print finish state
+	prt.print(Printer::Kind::Parent, 'F', total);
 }

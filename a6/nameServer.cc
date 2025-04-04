@@ -1,5 +1,7 @@
 #include "nameServer.h"
 
+#include "vendingMachine.h"
+
 NameServer::NameServer(Printer &prt, unsigned int numVendingMachines,
 					   unsigned int numStudents)
 	: prt(prt),
@@ -9,7 +11,7 @@ NameServer::NameServer(Printer &prt, unsigned int numVendingMachines,
 	// distributing the students evenly across the vending machines in a round-robin
 	// fashine
 	positions = new unsigned int[numStudents];
-	for (unsigned int s = 0; s < numStudents; s += 1) {
+	for (unsigned int s = 0; s < numStudents; s++) {
 		positions[s] = s % numVendingMachines;
 	}
 
@@ -28,15 +30,10 @@ void NameServer::VMregister(VendingMachine *vendingmachine) {
 }
 
 VendingMachine *NameServer::getMachine(unsigned int id) {
-	unsigned int index = positions[id];	 // position of vending machine for student
+	unsigned int index = positions[id];
 	VendingMachine *vendingmachine = machines[index];
-
-	positions[id] =
-		(index + 1) % numVendingMachines;  // modulo incrementing position of student
-
-	prt.print(Printer::Kind::NameServer, 'N', id,
-			  vendingmachine->getId());	 // new vending machine
-
+	positions[id] = (index + 1) % numVendingMachines;
+	prt.print(Printer::Kind::NameServer, 'N', id, vendingmachine->getId());
 	return vendingmachine;
 }
 
@@ -50,7 +47,7 @@ void NameServer::main() {
 	for (;;) {	// all vending machines are registered before being given out
 		if (numMachineRegistered == numVendingMachines) break;	// finish registering
 		_Accept(VMregister) {
-			numMachineRegistered += 1;
+			numMachineRegistered++;
 		}  // _Accept
 	}
 

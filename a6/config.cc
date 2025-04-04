@@ -40,10 +40,9 @@ void processConfigFile(const char* configFile, ConfigParms& cparms) {
 	try {
 		ifstream in(configFile);  // open the configuration file for input
 
-		for (cnt = 0; cnt < Parmnum;
-			 cnt += 1) {					// parameter names can appear in any order
-			if (comments(in, name)) break;	// eof ?
-			for (posn = 0; posn < Parmnum && name != parms[posn].name; posn += 1)
+		for (cnt = 0; cnt < Parmnum; cnt++) {  // parameter names can appear in any order
+			if (comments(in, name)) break;	   // eof ?
+			for (posn = 0; posn < Parmnum && name != parms[posn].name; posn++)
 				;						  // linear search
 			if (posn == Parmnum) break;	  // configuration not found ?
 			if (parms[posn].used) break;  // duplicate configuration ?
@@ -55,7 +54,7 @@ void processConfigFile(const char* configFile, ConfigParms& cparms) {
 			}  // if
 			if (in.fail()) break;
 			in.ignore(numeric_limits<int>::max(), '\n');  // ignore remainder of line
-			numOfParm += 1;
+			numOfParm++;
 			parms[posn].used = true;
 			parms[posn].value = value;
 		}  // for

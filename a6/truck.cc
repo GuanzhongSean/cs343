@@ -36,14 +36,14 @@ void Truck::main() {
 
 			// calculate the total amount of sodas
 			unsigned int totalSodas = 0;  // total number of sodas
-			for (int i = 0; i < numFlavours; i += 1) {
+			for (int i = 0; i < numFlavours; i++) {
 				totalSodas += cargo[i];
 			}
 
 			prt.print(Printer::Kind::Truck, 'P', totalSodas);  // picked up shipment
 
 			for (unsigned int cycle = 0; cycle < numVendingMachines;
-				 cycle += 1) {				 // restock in cyclic order
+				 cycle++) {					 // restock in cyclic order
 				if (totalSodas == 0) break;	 // stop restocking is no more soda
 
 				lastMachineStocked =
@@ -62,7 +62,7 @@ void Truck::main() {
 
 				// restock the vending machine
 				unsigned int numNotReplenished = 0;	 // number of bottles not replenished
-				for (int f = 0; f < numFlavours; f += 1) {
+				for (int f = 0; f < numFlavours; f++) {
 					unsigned int sodaToRestock =
 						min(maxStockPerFlavour - stocks[f], cargo[f]);
 					stocks[f] += sodaToRestock;	  // update inventory of vending machine

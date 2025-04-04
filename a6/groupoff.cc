@@ -45,7 +45,7 @@ void Groupoff::main() {
 			if (giftCards.size() == 0)
 				break;			   // only do this if there is still value to assign
 			yield(groupoffDelay);  // yield a fixed amount of time
-			int random_index = prng(0, (int)giftCards.size() - 1);
+			int random_index = prng(0, giftCards.size() - 1);
 			WATCard *w = new WATCard();
 			watCards.push_back(w);
 			w->deposit(sodaCost);				  // put some money in the watCard

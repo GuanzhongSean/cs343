@@ -12,17 +12,14 @@
 #include "watcardOffice.h"
 
 _Task Student {
-	Printer &prt;					  // print state info
-	NameServer &nameServer;			  // get vending machine
-	WATCardOffice &cardOffice;		  // process watcard
-	Groupoff &groupoff;				  // group off to get giftcard
-	unsigned int id;				  // id of the student
-	unsigned int maxPurchases;		  // max number of bottles to purchase
-	unsigned int purchaseNum;		  // number of bottles to purchase
-	BottlingPlant::Flavours flavour;  // favourite soda to purchase
-	WATCard::FWATCard watcard;		  // from wardcard office
-	WATCard::FWATCard giftcard;		  // from groupoff
-	VendingMachine *vendingMachine;	  // vending machine to buy soda
+	Printer &prt;
+	NameServer &nameServer;
+	WATCardOffice &cardOffice;
+	Groupoff &groupoff;
+	unsigned int id, purchaseNum;
+	BottlingPlant::Flavours flavour;
+	WATCard::FWATCard watcard, giftcard;
+	VendingMachine *vendingMachine;
 	void main();
 
    public:

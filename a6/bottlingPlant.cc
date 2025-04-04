@@ -50,7 +50,7 @@ void BottlingPlant::main() {
 		_Accept(getShipment) {}	 // the last getShipement call, wil throw exception
 	} catch (uMutexFailure::RendezvousFailure&) {  // special kind of exception that
 												   // indicates problem on task's thread
-	}  // try
+	}											   // try
 
 	prt.print(Printer::Kind::BottlingPlant, 'F');  // print stopping message
 }

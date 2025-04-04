@@ -3,7 +3,7 @@
 Bank::Bank(unsigned int numStudents) {
 	accounts =
 		new unsigned int[numStudents];	// initialize array to store student-account info
-	for (unsigned int i = 0; i < numStudents; i += 1) {
+	for (unsigned int i = 0; i < numStudents; i++) {
 		accounts[i] = 0;  // each account initially starts with a balance of $0
 	}
 }

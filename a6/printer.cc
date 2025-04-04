@@ -29,7 +29,7 @@ void Printer::flush() {
 	}
 
 	// print all the stored information
-	for (int i = 0; i < numInstances; i += 1) {
+	for (int i = 0; i < numInstances; i++) {
 		if (buffer[i].isSet) {
 			buffer[i].printInfo();
 			buffer[i].isSet = false;
@@ -53,17 +53,17 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 	// calcu total number of columns, 6 includes parent, groupoff, WATCard office, name
 	// server, truck, bottling plant
 	numInstances = 6 + numStudents + numVendingMachines + numCouriers;
-	cout << "Parent\tGroupoff\tWATOff\tNames\tTruck\tPlant\t";
+	cout << "Parent\tGropoff\tWATOff\tNames\tTruck\tPlant\t";
 
-	for (unsigned int i = 0; i < numStudents; i += 1) {
+	for (unsigned int i = 0; i < numStudents; i++) {
 		cout << "Stud" << i << "\t";
 	}
 
-	for (unsigned int i = 0; i < numVendingMachines; i += 1) {
+	for (unsigned int i = 0; i < numVendingMachines; i++) {
 		cout << "Mach" << i << "\t";
 	}
 
-	for (unsigned int i = 0; i < numCouriers; i += 1) {
+	for (unsigned int i = 0; i < numCouriers; i++) {
 		cout << "Cour" << i;
 		if (i != numCouriers - 1) {
 			cout << "\t";
@@ -72,7 +72,7 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 
 	cout << endl;
 
-	for (int i = 0; i < numInstances; i += 1) {	 // print second line
+	for (int i = 0; i < numInstances; i++) {  // print second line
 		cout << "*******";
 		if (i != numInstances - 1) {  // don't print tab at the end of line
 			cout << "\t";
