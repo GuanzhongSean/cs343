@@ -3,9 +3,9 @@
 Printer::PrinterEntry::PrinterEntry()
 	: isSet(false),
 	  state(0),
-	  value1(-1),
+	  value1(0),
+	  value2(0),
 	  isValue1Set(false),
-	  value2(-1),
 	  isValue2Set(false) {}
 
 void Printer::PrinterEntry::print() {
@@ -39,7 +39,6 @@ void Printer::flush() {
 			cout << "\t";
 		}
 	}
-
 	cout << endl;
 }
 
@@ -48,26 +47,20 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 	: numStudents(numStudents),
 	  numVendingMachines(numVendingMachines),
 	  numCouriers(numCouriers) {
-	// calcu total number of columns, 6 includes parent, groupoff, WATCard office, name
-	// server, truck, bottling plant
 	numInstances = 6 + numStudents + numVendingMachines + numCouriers;
 	cout << "Parent\tGropoff\tWATOff\tNames\tTruck\tPlant\t";
-
 	for (unsigned int i = 0; i < numStudents; i++) {
 		cout << "Stud" << i << "\t";
 	}
-
 	for (unsigned int i = 0; i < numVendingMachines; i++) {
 		cout << "Mach" << i << "\t";
 	}
-
 	for (unsigned int i = 0; i < numCouriers; i++) {
 		cout << "Cour" << i;
 		if (i != numCouriers - 1) {
 			cout << "\t";
 		}
 	}
-
 	cout << endl;
 
 	for (int i = 0; i < numInstances; i++) {
@@ -78,17 +71,16 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 	}
 	cout << endl;
 
-	buffer = new PrinterEntry[numInstances]();	// initiazlie the buffer
+	buffer = new PrinterEntry[numInstances]();
 }
 
 Printer::~Printer() {
 	flush();
 	delete[] buffer;
-	cout << "***********************" << endl;	// more output at the end
+	cout << "***********************" << endl;
 }
 
 void Printer::print(Kind kind, char state) {
-	// flush the buffered data if the column is about to be overwritten
 	if (buffer[kind].isSet) {
 		flush();
 	}
@@ -109,9 +101,8 @@ void Printer::print(Kind kind, char state, unsigned int value1, unsigned int val
 	buffer[kind].isValue2Set = true;
 }
 
-int Printer::printAndReturnIndex(Kind kind, unsigned int lid, char state) {
-	// calcu the index of instance in the buffer
-	int i = 6;
+unsigned int Printer::printAndReturnIndex(Kind kind, unsigned int lid, char state) {
+	unsigned int i = Kind::Student;
 	switch (kind) {
 		case Kind::Student:
 			i += lid;
@@ -122,9 +113,9 @@ int Printer::printAndReturnIndex(Kind kind, unsigned int lid, char state) {
 		case Kind::Courier:
 			i += numStudents + numVendingMachines + lid;
 			break;
-		default:  // invalid kind
-			cerr << "passed invalid kind" << endl;
-			break;
+		default:
+			cerr << "Invalid Kind" << endl;
+			exit(EXIT_FAILURE);
 	}
 
 	if (buffer[i].isSet) {
@@ -140,14 +131,14 @@ void Printer::print(Kind kind, unsigned int lid, char state) {
 }
 
 void Printer::print(Kind kind, unsigned int lid, char state, unsigned int value1) {
-	int i = printAndReturnIndex(kind, lid, state);
+	unsigned int i = printAndReturnIndex(kind, lid, state);
 	buffer[i].value1 = value1;
 	buffer[i].isValue1Set = true;
 }
 
 void Printer::print(Kind kind, unsigned int lid, char state, unsigned int value1,
 					unsigned int value2) {
-	int i = printAndReturnIndex(kind, lid, state);
+	unsigned int i = printAndReturnIndex(kind, lid, state);
 	buffer[i].value1 = value1;
 	buffer[i].isValue1Set = true;
 	buffer[i].value2 = value2;

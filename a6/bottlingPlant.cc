@@ -34,8 +34,8 @@ void BottlingPlant::main() {
 			currentStorage[i] = prng(0, maxStockPerFlavour);
 			total += currentStorage[i];
 		}
-		prt.print(Printer::Kind::BottlingPlant, 'G', total);
 		yield(timeBetweenShipments);
+		prt.print(Printer::Kind::BottlingPlant, 'G', total);
 		_Accept(~BottlingPlant) {
 			timeToShutdown = true;
 			break;

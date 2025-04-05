@@ -6,15 +6,12 @@
 using namespace std;
 
 _Monitor Printer {
-	int numInstances, numStudents;
-	int numVendingMachines, numCouriers;
+	int numInstances, numStudents, numVendingMachines, numCouriers;
 	struct PrinterEntry {
 		bool isSet;
 		char state;
-		unsigned int value1;
-		bool isValue1Set;
-		unsigned int value2;
-		bool isValue2Set;
+		unsigned int value1, value2;
+		bool isValue1Set, isValue2Set;
 		PrinterEntry();
 		void print();
 	};
@@ -45,7 +42,7 @@ _Monitor Printer {
 			   unsigned int value2);
 
    private:
-	int printAndReturnIndex(Kind kind, unsigned int lid, char state);
+	unsigned int printAndReturnIndex(Kind kind, unsigned int lid, char state);
 };
 
 #endif

@@ -47,7 +47,10 @@ WATCardOffice::Job *WATCardOffice::requestWork() {
 void WATCardOffice::main() {
 	while (true) {
 		_Accept(~WATCardOffice) {
-			requests.clear();
+			while (!requests.empty()) {
+				delete requests.front();
+				requests.pop_front();
+			}
 			for (unsigned i = 0; i < numCouriers; i++) {
 				_Accept(requestWork);
 			}
@@ -77,7 +80,6 @@ void WATCardOffice::Courier::main() {
 		WATCard *card = job->args.card;
 		unsigned int sid = job->args.sid;
 		unsigned int amount = job->args.amount;
-
 		prt.print(Printer::Kind::Courier, lid, 't', sid, amount);
 		bank.withdraw(sid, amount);
 		card->deposit(amount);

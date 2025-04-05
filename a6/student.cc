@@ -10,13 +10,13 @@ Student::Student(Printer& prt, NameServer& nameServer, WATCardOffice& cardOffice
 	purchaseNum = prng(1, maxPurchases);
 	flavour = static_cast<BottlingPlant::Flavours>(prng(0, 3));
 	prt.print(Printer::Kind::Student, id, 'S', flavour, purchaseNum);
+}
+
+void Student::main() {
 	watcard = cardOffice.create(id, 5);
 	giftcard = groupoff.giftCard(id);
 	vendingMachine = nameServer.getMachine(id);
 	prt.print(Printer::Kind::Student, id, 'V', vendingMachine->getId());
-}
-
-void Student::main() {
 	unsigned int free = 0;
 	for (unsigned int purchased = 0; purchased < purchaseNum; purchased++) {
 		yield(prng(1, 10));

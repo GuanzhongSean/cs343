@@ -9,7 +9,6 @@ VendingMachine::VendingMachine(Printer &prt, NameServer &nameServer, unsigned in
 	  isRestocking(false),
 	  raiseType(RaiseType::none) {
 	prt.print(Printer::Kind::Vending, id, 'S', sodaCost);
-	nameServer.VMregister(this);
 }
 
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard &card) {
@@ -47,6 +46,7 @@ unsigned int VendingMachine::getId() {
 }
 
 void VendingMachine::main() {
+	nameServer.VMregister(this);
 	while (true) {
 		_Accept(~VendingMachine) {
 			break;

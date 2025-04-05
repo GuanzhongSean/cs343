@@ -36,35 +36,38 @@ int main(int argc, char *argv[]) {
 	ConfigParms configParms;
 	processConfigFile(configFile, configParms);
 
-	Printer printer(configParms.numStudents, configParms.numVendingMachines,
-					configParms.numCouriers);
-	Bank bank(configParms.numStudents);
-	Parent parent(printer, bank, configParms.numStudents, configParms.parentalDelay);
-	WATCardOffice cardOffice(printer, bank, configParms.numCouriers);
-	Groupoff groupoff(printer, configParms.numStudents, configParms.sodaCost,
-					  configParms.groupoffDelay);
-	NameServer nameServer(printer, configParms.numVendingMachines,
-						  configParms.numStudents);
-	VendingMachine *machines[configParms.numVendingMachines];
-	for (unsigned int m = 0; m < configParms.numVendingMachines; m++) {
-		machines[m] = new VendingMachine(printer, nameServer, m, configParms.sodaCost);
-	}
-	BottlingPlant *plant = new BottlingPlant(
-		printer, nameServer, configParms.numVendingMachines,
-		configParms.maxShippedPerFlavour, configParms.maxStockPerFlavour,
-		configParms.timeBetweenShipments);
-	Student *students[configParms.numStudents];
-	for (unsigned int s = 0; s < configParms.numStudents; s++) {
-		students[s] = new Student(printer, nameServer, cardOffice, groupoff, s,
-								  configParms.maxPurchases);
-	}
+	{
+		Printer printer(configParms.numStudents, configParms.numVendingMachines,
+						configParms.numCouriers);
+		Bank bank(configParms.numStudents);
+		Parent parent(printer, bank, configParms.numStudents, configParms.parentalDelay);
+		WATCardOffice cardOffice(printer, bank, configParms.numCouriers);
+		Groupoff groupoff(printer, configParms.numStudents, configParms.sodaCost,
+						  configParms.groupoffDelay);
+		NameServer nameServer(printer, configParms.numVendingMachines,
+							  configParms.numStudents);
+		VendingMachine *machines[configParms.numVendingMachines];
+		for (unsigned int m = 0; m < configParms.numVendingMachines; m++) {
+			machines[m] =
+				new VendingMachine(printer, nameServer, m, configParms.sodaCost);
+		}
+		BottlingPlant *plant = new BottlingPlant(
+			printer, nameServer, configParms.numVendingMachines,
+			configParms.maxShippedPerFlavour, configParms.maxStockPerFlavour,
+			configParms.timeBetweenShipments);
+		Student *students[configParms.numStudents];
+		for (unsigned int s = 0; s < configParms.numStudents; s++) {
+			students[s] = new Student(printer, nameServer, cardOffice, groupoff, s,
+									  configParms.maxPurchases);
+		}
 
-	for (unsigned int s = 0; s < configParms.numStudents; s++) {
-		delete students[s];
-	}
-	delete plant;
-	for (unsigned int m = 0; m < configParms.numVendingMachines; m++) {
-		delete machines[m];
+		for (unsigned int s = 0; s < configParms.numStudents; s++) {
+			delete students[s];
+		}
+		delete plant;
+		for (unsigned int m = 0; m < configParms.numVendingMachines; m++) {
+			delete machines[m];
+		}
 	}
 
 	char *nosummary = getenv("NOSUMMARY");

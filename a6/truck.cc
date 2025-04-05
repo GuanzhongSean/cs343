@@ -35,9 +35,9 @@ void Truck::main() {
 			if (totalSodas == 0) break;
 
 			lastMachineStocked = (lastMachineStocked + 1) % numVendingMachines;
-			VendingMachine *vendingmachine = machines[lastMachineStocked];
-			unsigned id = vendingmachine->getId();
-			unsigned int *stocks = vendingmachine->inventory();
+			VendingMachine *vm = machines[lastMachineStocked];
+			unsigned id = vm->getId();
+			unsigned int *stocks = vm->inventory();
 			prt.print(Printer::Kind::Truck, 'd', id, totalSodas);
 
 			unsigned int numNotReplenished = 0;
@@ -49,7 +49,7 @@ void Truck::main() {
 				totalSodas -= sodaToRestock;
 				numNotReplenished += (maxStockPerFlavour - stocks[f]);
 			}
-			vendingmachine->restocked();
+			vm->restocked();
 			if (numNotReplenished > 0) {
 				prt.print(Printer::Kind::Truck, 'U', id, numNotReplenished);
 			}
