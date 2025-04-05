@@ -2,12 +2,13 @@
 #define __BANK_H__
 
 _Monitor Bank {
-	unsigned int* accounts;	 // student-account information for all students
+	unsigned int* accounts;
+
    public:
-	Bank(unsigned int numStudents);						  // constructor
-	~Bank();											  // destructor
-	void deposit(unsigned int id, unsigned int amount);	  // deposit money to account id
-	void withdraw(unsigned int id, unsigned int amount);  // withdraw money to account id
+	Bank(unsigned int numStudents);
+	~Bank();
+	void deposit(unsigned int id, unsigned int amount);
+	void withdraw(unsigned int id, unsigned int amount);
 };
 
 #endif

@@ -14,43 +14,40 @@ BottlingPlant::BottlingPlant(Printer& prt, NameServer& nameServer,
 	  maxShippedPerFlavour(maxShippedPerFlavour),
 	  maxStockPerFlavour(maxStockPerFlavour),
 	  timeBetweenShipments(timeBetweenShipments),
-	  timeToShutdown(false),
-	  currentStorage(0) {}
+	  timeToShutdown(false) {
+	prt.print(Printer::Kind::BottlingPlant, 'S');
+}
 
 void BottlingPlant::getShipment(unsigned int cargo[]) {
-	if (timeToShutdown)
-		_Throw Shutdown();	// in the shutdown case, no shipement is copied
-	for (int i = 0; i < numFlavours; i++) {	 // assumming we have 4 flavours
-		cargo[i] = currentStorage;			 // put the storage in the crago
+	if (timeToShutdown) _Throw Shutdown();
+	for (int i = 0; i < numFlavours; i++) {
+		cargo[i] = currentStorage[i];
 	}
-	currentStorage = 0;	 // no storage left in the plant
 }
 
 void BottlingPlant::main() {
-	prt.print(Printer::Kind::BottlingPlant, 'S');  // print starting message
-	Truck t(prt, nameServer, *this, numVendingMachines,
-			maxStockPerFlavour);  // create a truck
+	Truck t(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour);
 
 	while (true) {
-		if (currentStorage == 0) {
-			currentStorage = prng(maxShippedPerFlavour);  // create a production run
-			prt.print(Printer::Kind::BottlingPlant, 'G', currentStorage * numFlavours);
+		unsigned int total = 0;
+		for (int i = 0; i < numFlavours; i++) {
+			currentStorage[i] = prng(0, maxStockPerFlavour);
+			total += currentStorage[i];
 		}
-		yield(timeBetweenShipments);  // stop for a period of time
+		prt.print(Printer::Kind::BottlingPlant, 'G', total);
+		yield(timeBetweenShipments);
 		_Accept(~BottlingPlant) {
-			timeToShutdown = true;	// set the flag, next getshipment will throw execption
+			timeToShutdown = true;
 			break;
 		}
 		or _Accept(getShipment) {
 			prt.print(Printer::Kind::BottlingPlant, 'P');
-		}  //_Accept
+		}
 	}
 
 	try {
-		_Accept(getShipment) {}	 // the last getShipement call, wil throw exception
-	} catch (uMutexFailure::RendezvousFailure&) {  // special kind of exception that
-												   // indicates problem on task's thread
-	}											   // try
+		_Accept(getShipment);
+	} catch (uMutexFailure::RendezvousFailure&) {}
 
-	prt.print(Printer::Kind::BottlingPlant, 'F');  // print stopping message
+	prt.print(Printer::Kind::BottlingPlant, 'F');
 }

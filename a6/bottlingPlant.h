@@ -8,15 +8,16 @@
 _Task NameServer;
 
 _Task BottlingPlant {
-	static const int numFlavours = 4;
+   public:
+	static constexpr int numFlavours = 4;
+
+   private:
 	Printer& prt;
 	NameServer& nameServer;
-	unsigned int numVendingMachines;
-	unsigned int maxShippedPerFlavour;
-	unsigned int maxStockPerFlavour;
-	unsigned int timeBetweenShipments;
+	unsigned int numVendingMachines, maxShippedPerFlavour;
+	unsigned int maxStockPerFlavour, timeBetweenShipments;
 	bool timeToShutdown;
-	unsigned int currentStorage;
+	unsigned int currentStorage[numFlavours]{0};
 	void main();
 
    public:

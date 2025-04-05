@@ -5,12 +5,12 @@
 #include "printer.h"
 
 _Task Parent {
-	Printer& prt;				 // printer to print states info
-	Bank& bank;					 // bank to endow gifts
-	unsigned int numStudents;	 // number of students
-	unsigned int parentalDelay;	 // time to yield
+	Printer& prt;
+	Bank& bank;
+	unsigned int numStudents;
+	unsigned int parentalDelay;
+	void main();
 
-	void main();  // main
    public:
 	Parent(Printer & prt, Bank & bank, unsigned int numStudents,
 		   unsigned int parentalDelay);

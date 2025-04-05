@@ -1,15 +1,11 @@
 #include "bank.h"
 
 Bank::Bank(unsigned int numStudents) {
-	accounts =
-		new unsigned int[numStudents];	// initialize array to store student-account info
-	for (unsigned int i = 0; i < numStudents; i++) {
-		accounts[i] = 0;  // each account initially starts with a balance of $0
-	}
+	accounts = new unsigned int[numStudents]();
 }
 
 Bank::~Bank() {
-	delete accounts;  // free memory
+	delete[] accounts;
 }
 
 void Bank::deposit(unsigned int id, unsigned int amount) {
@@ -17,10 +13,8 @@ void Bank::deposit(unsigned int id, unsigned int amount) {
 }
 
 void Bank::withdraw(unsigned int id, unsigned int amount) {
-	while (true) {
-		if (amount <= accounts[id]) break;
+	while (amount > accounts[id]) {
 		_Accept(deposit);
 	}
-
 	accounts[id] -= amount;
 }

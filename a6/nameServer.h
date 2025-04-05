@@ -7,12 +7,9 @@ _Task VendingMachine;
 
 _Task NameServer {
 	Printer& prt;
-	unsigned int numVendingMachines;	// number of vending machines
-	unsigned int numStudents;			// number of students
-	unsigned int numMachineRegistered;	// number of VM registered
-
-	unsigned int* positions;	// array of positions of the VM for students
-	VendingMachine** machines;	// array of pointers to vending machines
+	unsigned int numVendingMachines, numStudents, numMachineRegistered;
+	unsigned int* positions;
+	VendingMachine** machines;
 
 	void main();
 

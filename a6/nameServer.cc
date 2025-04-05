@@ -8,14 +8,12 @@ NameServer::NameServer(Printer &prt, unsigned int numVendingMachines,
 	  numVendingMachines(numVendingMachines),
 	  numStudents(numStudents),
 	  numMachineRegistered(0) {
-	// distributing the students evenly across the vending machines in a round-robin
-	// fashine
-	positions = new unsigned int[numStudents];
+	prt.print(Printer::Kind::NameServer, 'S');
+	positions = new unsigned int[numStudents]();
 	for (unsigned int s = 0; s < numStudents; s++) {
 		positions[s] = s % numVendingMachines;
 	}
-
-	machines = new VendingMachine *[numVendingMachines];
+	machines = new VendingMachine *[numVendingMachines]();
 }
 
 NameServer::~NameServer() {
@@ -24,17 +22,17 @@ NameServer::~NameServer() {
 }
 
 void NameServer::VMregister(VendingMachine *vendingmachine) {
-	unsigned int id = vendingmachine->getId();		// identifier of the machine
-	machines[id] = vendingmachine;					// register the VM
-	prt.print(Printer::Kind::NameServer, 'R', id);	// vending machine v registering
+	unsigned int id = vendingmachine->getId();
+	machines[id] = vendingmachine;
+	prt.print(Printer::Kind::NameServer, 'R', id);
 }
 
 VendingMachine *NameServer::getMachine(unsigned int id) {
 	unsigned int index = positions[id];
-	VendingMachine *vendingmachine = machines[index];
+	VendingMachine *vm = machines[index];
 	positions[id] = (index + 1) % numVendingMachines;
-	prt.print(Printer::Kind::NameServer, 'N', id, vendingmachine->getId());
-	return vendingmachine;
+	prt.print(Printer::Kind::NameServer, 'N', id, vm->getId());
+	return vm;
 }
 
 VendingMachine **NameServer::getMachineList() {
@@ -42,27 +40,18 @@ VendingMachine **NameServer::getMachineList() {
 }
 
 void NameServer::main() {
-	prt.print(Printer::Kind::NameServer, 'S');	// starting
-
-	for (;;) {	// all vending machines are registered before being given out
-		if (numMachineRegistered == numVendingMachines) break;	// finish registering
+	while (numMachineRegistered != numVendingMachines) {
 		_Accept(VMregister) {
 			numMachineRegistered++;
-		}  // _Accept
+		}
 	}
+	assert(numMachineRegistered == numVendingMachines);
 
-	assert(numMachineRegistered == numVendingMachines);	 // prevent unexpected suprises
-
-	for (;;) {
-		_Accept(~NameServer) {	// busy waiting for its destructor
+	while (true) {
+		_Accept(~NameServer) {
 			break;
 		}
-		or
-			_Accept(getMachine){
-
-			} or
-			_Accept(getMachineList) {}	// _Accept
+		or _Accept(getMachine || getMachineList)
 	}
-
-	prt.print(Printer::Kind::NameServer, 'F');	// finished
+	prt.print(Printer::Kind::NameServer, 'F');
 }

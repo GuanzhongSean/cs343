@@ -9,7 +9,6 @@
 #include "watcard.h"
 
 _Task VendingMachine {
-	static const int numFlavours = 4;
 	enum RaiseType { none, funds, stock, free };
 
 	Printer &prt;
@@ -17,7 +16,7 @@ _Task VendingMachine {
 	unsigned int id, sodaCost;
 	bool isRestocking;
 	RaiseType raiseType;
-	unsigned int stocks[numFlavours] = {0};
+	unsigned int stocks[BottlingPlant::numFlavours]{0};
 	uCondition cond;
 	WATCard *card;
 	BottlingPlant::Flavours flavour;

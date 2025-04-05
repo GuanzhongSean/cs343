@@ -8,6 +8,7 @@ VendingMachine::VendingMachine(Printer &prt, NameServer &nameServer, unsigned in
 	  sodaCost(sodaCost),
 	  isRestocking(false),
 	  raiseType(RaiseType::none) {
+	prt.print(Printer::Kind::Vending, id, 'S', sodaCost);
 	nameServer.VMregister(this);
 }
 
@@ -46,7 +47,6 @@ unsigned int VendingMachine::getId() {
 }
 
 void VendingMachine::main() {
-	prt.print(Printer::Kind::Vending, id, 'S', sodaCost);
 	while (true) {
 		_Accept(~VendingMachine) {
 			break;
@@ -63,12 +63,13 @@ void VendingMachine::main() {
 			if (stocks[flavour] == 0) {
 				raiseType = RaiseType::stock;
 			} else if (prng(0, 4) == 0) {
-				stocks[flavour] -= 1;
+				stocks[flavour]--;
 				raiseType = RaiseType::free;
+				prt.print(Printer::Kind::Vending, id, 'A');
 			} else if (card->getBalance() < sodaCost) {
 				raiseType = RaiseType::funds;
 			} else {
-				stocks[flavour] -= 1;
+				stocks[flavour]--;
 				card->withdraw(sodaCost);
 				prt.print(Printer::Kind::Vending, id, 'B', flavour, stocks[flavour]);
 			}

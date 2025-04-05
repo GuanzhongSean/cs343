@@ -1,6 +1,6 @@
 #include "printer.h"
 
-Printer::Info::Info()
+Printer::PrinterEntry::PrinterEntry()
 	: isSet(false),
 	  state(0),
 	  value1(-1),
@@ -8,8 +8,8 @@ Printer::Info::Info()
 	  value2(-1),
 	  isValue2Set(false) {}
 
-void Printer::Info::printInfo() {
-	cout << state;	// print state
+void Printer::PrinterEntry::print() {
+	cout << state;
 	if (isValue1Set) {
 		cout << value1;
 	}
@@ -19,25 +19,23 @@ void Printer::Info::printInfo() {
 }
 
 void Printer::flush() {
-	// calculate the last column with stored information
 	int lastCol = 0;
-	for (int i = numInstances - 1; i >= 0; i -= 1) {
-		if (buffer[i].isSet) {	// found and last column with information, then break
+	for (int i = numInstances - 1; i >= 0; i--) {
+		if (buffer[i].isSet) {
 			lastCol = i;
 			break;
 		}
 	}
 
-	// print all the stored information
 	for (int i = 0; i < numInstances; i++) {
 		if (buffer[i].isSet) {
-			buffer[i].printInfo();
+			buffer[i].print();
 			buffer[i].isSet = false;
 			buffer[i].isValue1Set = false;
 			buffer[i].isValue2Set = false;
 		}
 
-		if (i < lastCol) {	// don't print tab after the last stored information
+		if (i < lastCol) {
 			cout << "\t";
 		}
 	}
@@ -72,20 +70,20 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines,
 
 	cout << endl;
 
-	for (int i = 0; i < numInstances; i++) {  // print second line
+	for (int i = 0; i < numInstances; i++) {
 		cout << "*******";
-		if (i != numInstances - 1) {  // don't print tab at the end of line
+		if (i != numInstances - 1) {
 			cout << "\t";
 		}
 	}
 	cout << endl;
 
-	buffer = new Info[numInstances];  // initiazlie the buffer
+	buffer = new PrinterEntry[numInstances]();	// initiazlie the buffer
 }
 
 Printer::~Printer() {
-	flush();									// flush all the stored information
-	delete[] buffer;							// free memory
+	flush();
+	delete[] buffer;
 	cout << "***********************" << endl;	// more output at the end
 }
 
@@ -95,7 +93,6 @@ void Printer::print(Kind kind, char state) {
 		flush();
 	}
 
-	// store the information
 	buffer[kind].isSet = true;
 	buffer[kind].state = state;
 }
@@ -130,12 +127,9 @@ int Printer::printAndReturnIndex(Kind kind, unsigned int lid, char state) {
 			break;
 	}
 
-	// flush the buffered data if the column is about to be overwritten
 	if (buffer[i].isSet) {
 		flush();
 	}
-
-	// store the information
 	buffer[i].isSet = true;
 	buffer[i].state = state;
 	return i;

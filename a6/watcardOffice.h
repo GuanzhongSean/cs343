@@ -7,11 +7,9 @@
 #include "printer.h"
 #include "watcard.h"
 
-using namespace std;
-
 _Task WATCardOffice {
-	Printer & prt;
-	Bank & bank;
+	Printer &prt;
+	Bank &bank;
 	unsigned int numCouriers;
 	struct Job {  // marshalled arguments and return future
 		struct Args {
@@ -26,9 +24,9 @@ _Task WATCardOffice {
 		Job(Args args) : args(args) {}
 	};
 	_Task Courier {
-		Printer & prt;
-		Bank & bank;
-		WATCardOffice & cardOffice;
+		Printer &prt;
+		Bank &bank;
+		WATCardOffice &cardOffice;
 		unsigned lid;
 		void main();
 
@@ -39,6 +37,7 @@ _Task WATCardOffice {
 	Courier **courierPool;
 	list<Job *> requests;
 	list<WATCard *> cardList;
+	Job *job;
 	void main();
 
    public:

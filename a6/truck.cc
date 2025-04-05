@@ -1,10 +1,6 @@
 #include "truck.h"
 
-#include <algorithm>
-
 #include "vendingMachine.h"
-
-using namespace std;
 
 Truck::Truck(Printer &prt, NameServer &nameServer, BottlingPlant &plant,
 			 unsigned int numVendingMachines, unsigned int maxStockPerFlavour)
@@ -12,81 +8,57 @@ Truck::Truck(Printer &prt, NameServer &nameServer, BottlingPlant &plant,
 	  nameServer(nameServer),
 	  plant(plant),
 	  numVendingMachines(numVendingMachines),
-	  maxStockPerFlavour(maxStockPerFlavour) {}
+	  maxStockPerFlavour(maxStockPerFlavour) {
+	prt.print(Printer::Kind::Truck, 'S');
+}
 
 void Truck::main() {
-	prt.print(Printer::Kind::Truck, 'S');  // starting
-
-	int lastMachineStocked = -1;	  // index of the last machine the truck restocked
-	unsigned int cargo[numFlavours];  // cargo to obtain shipment
-	VendingMachine **machines =
-		nameServer.getMachineList();  // obtain location of each VM from the name server
+	int lastMachineStocked = -1;
+	unsigned int cargo[BottlingPlant::numFlavours];
+	VendingMachine **machines = nameServer.getMachineList();
 
 	while (true) {
-		_Accept(~Truck) {
+		yield(prng(1, 10));
+		try {
+			plant.getShipment(cargo);
+		} catch (BottlingPlant::Shutdown &) {
 			break;
 		}
-		_Else {
-			yield(prng(1, 10));
-			try {
-				plant.getShipment(cargo);
-			} catch (BottlingPlant::Shutdown &) {
-				break;
-			}  // try
 
-			// calculate the total amount of sodas
-			unsigned int totalSodas = 0;  // total number of sodas
-			for (int i = 0; i < numFlavours; i++) {
-				totalSodas += cargo[i];
+		unsigned int totalSodas = 0;
+		for (int i = 0; i < BottlingPlant::numFlavours; i++) {
+			totalSodas += cargo[i];
+		}
+		prt.print(Printer::Kind::Truck, 'P', totalSodas);
+
+		for (unsigned int cycle = 0; cycle < numVendingMachines; cycle++) {
+			if (totalSodas == 0) break;
+
+			lastMachineStocked = (lastMachineStocked + 1) % numVendingMachines;
+			VendingMachine *vendingmachine = machines[lastMachineStocked];
+			unsigned id = vendingmachine->getId();
+			unsigned int *stocks = vendingmachine->inventory();
+			prt.print(Printer::Kind::Truck, 'd', id, totalSodas);
+
+			unsigned int numNotReplenished = 0;
+			for (int f = 0; f < BottlingPlant::numFlavours; f++) {
+				unsigned int sodaToRestock =
+					min(maxStockPerFlavour - stocks[f], cargo[f]);
+				stocks[f] += sodaToRestock;
+				cargo[f] -= sodaToRestock;
+				totalSodas -= sodaToRestock;
+				numNotReplenished += (maxStockPerFlavour - stocks[f]);
 			}
-
-			prt.print(Printer::Kind::Truck, 'P', totalSodas);  // picked up shipment
-
-			for (unsigned int cycle = 0; cycle < numVendingMachines;
-				 cycle++) {					 // restock in cyclic order
-				if (totalSodas == 0) break;	 // stop restocking is no more soda
-
-				lastMachineStocked =
-					(lastMachineStocked + 1) %
-					numVendingMachines;	 // index of next machine to restock
-
-				VendingMachine *vendingmachine =
-					machines[lastMachineStocked];  // machine to be restocked
-				unsigned id =
-					vendingmachine->getId();  // identifier of the vending machine
-				unsigned int *stocks =
-					vendingmachine->inventory();  // inventory of the machine
-
-				prt.print(Printer::Kind::Truck, 'd', id,
-						  totalSodas);	// begin delivery to vending machine
-
-				// restock the vending machine
-				unsigned int numNotReplenished = 0;	 // number of bottles not replenished
-				for (int f = 0; f < numFlavours; f++) {
-					unsigned int sodaToRestock =
-						min(maxStockPerFlavour - stocks[f], cargo[f]);
-					stocks[f] += sodaToRestock;	  // update inventory of vending machine
-					cargo[f] -= sodaToRestock;	  // update cargo
-					totalSodas -= sodaToRestock;  // update total number of sodas
-					numNotReplenished += (maxStockPerFlavour - stocks[f]);
-				}
-
-				vendingmachine
-					->restocked();	// indicate the truck has finished restocking
-
-				if (numNotReplenished > 0) {  // unsuccessfully filled vending machine
-					prt.print(Printer::Kind::Truck, 'U', id, numNotReplenished);
-				}
-
-				prt.print(Printer::Kind::Truck, 'D', id, totalSodas);
-
-				if (prng(1, 100) == 1) {
-					prt.print(Printer::Kind::Truck, 'W');  // wait for flat tire fix
-					yield(10);
-				}
+			vendingmachine->restocked();
+			if (numNotReplenished > 0) {
+				prt.print(Printer::Kind::Truck, 'U', id, numNotReplenished);
 			}
-		}  // _Accept
+			prt.print(Printer::Kind::Truck, 'D', id, totalSodas);
+			if (prng(1, 100) == 1) {
+				prt.print(Printer::Kind::Truck, 'W');
+				yield(10);
+			}
+		}
 	}
-
-	prt.print(Printer::Kind::Truck, 'F');  // finished
+	prt.print(Printer::Kind::Truck, 'F');
 }

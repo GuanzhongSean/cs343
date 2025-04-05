@@ -6,24 +6,21 @@
 using namespace std;
 
 _Monitor Printer {
-	int numInstances;		 // total number of columns (instances)
-	int numStudents;		 // number of student instances
-	int numVendingMachines;	 // number of vending machine instances
-	int numCouriers;		 // number of courier instances
-
-	struct Info {			  // store the information of an instance
-		bool isSet;			  // true if currently store valid information
-		char state;			  // the state of the instance
-		unsigned int value1;  // value1 of the instance
-		bool isValue1Set;	  // true if value1 is set
-		unsigned int value2;  // value2 of the instance
-		bool isValue2Set;	  // true if value2 is set
-		Info();				  // constructor
-		void printInfo();	  // print the information
+	int numInstances, numStudents;
+	int numVendingMachines, numCouriers;
+	struct PrinterEntry {
+		bool isSet;
+		char state;
+		unsigned int value1;
+		bool isValue1Set;
+		unsigned int value2;
+		bool isValue2Set;
+		PrinterEntry();
+		void print();
 	};
+	PrinterEntry *buffer;
+	void flush();
 
-	Info *buffer;  // store information for each kind of instance
-	void flush();  // flush all the stored information
    public:
 	enum Kind {
 		Parent,
@@ -48,8 +45,6 @@ _Monitor Printer {
 			   unsigned int value2);
 
    private:
-	// same as print( Kind kind, unsigned int lid, char state ), but return the index of
-	// the instance in the buffer
 	int printAndReturnIndex(Kind kind, unsigned int lid, char state);
 };
 

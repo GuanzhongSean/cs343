@@ -1,60 +1,54 @@
 #include "groupoff.h"
 
+#include "watcard.h"
+
 Groupoff::Groupoff(Printer &prt, unsigned int numStudents, unsigned int sodaCost,
 				   unsigned int groupoffDelay)
 	: prt(prt),
 	  numStudents(numStudents),
 	  sodaCost(sodaCost),
 	  groupoffDelay(groupoffDelay),
-	  calledUpon(0) {
+	  numGiftCards(0) {
 	prt.print(Printer::Kind::Groupoff, 'S');
+	giftCards = new pair<WATCard::FWATCard, unsigned int>[numStudents]();
+	watCards = new WATCard *[numStudents]();
 }
 
 Groupoff::~Groupoff() {
-	for (;;) {	// free memory
-		if (watCards.empty()) break;
-		delete watCards.back();
-		watCards.pop_back();
-	}  // while
+	for (unsigned int i = 0; i < numStudents; i++) {
+		delete watCards[i];
+	}
+	delete[] giftCards;
+	delete[] watCards;
 }
 
 WATCard::FWATCard Groupoff::giftCard(unsigned int id) {
 	WATCard::FWATCard w;
-	giftCards.push_back(w);
-	studentIds.push_back(id);
+	giftCards[numGiftCards] = make_pair(w, id);
 	return w;
 }
 
 void Groupoff::main() {
-	while (true) {	// for each student, accept one giftCard call
-		if (calledUpon == numStudents)
-			break;	// each student has called giftCard routine once
+	while (numGiftCards < numStudents) {
 		_Accept(giftCard) {
-			calledUpon++;
-		}  // _Accept
+			numGiftCards++;
+		}
 	}
 
-	while (true) {
+	while (numGiftCards > 0) {
 		_Accept(~Groupoff) {
-			// it is possible that not all students got a gift card
-			// it is important the destructor of Groupoff is called only after all student
-			// tasks are finished
 			break;
 		}
-		_Else {	 // busy waiting
-			if (giftCards.size() == 0)
-				break;			   // only do this if there is still value to assign
-			yield(groupoffDelay);  // yield a fixed amount of time
-			int random_index = prng(0, giftCards.size() - 1);
+		_Else {
+			yield(groupoffDelay);
 			WATCard *w = new WATCard();
-			watCards.push_back(w);
-			w->deposit(sodaCost);				  // put some money in the watCard
-			giftCards[random_index].delivery(w);  // dilevery the real value
-			unsigned int studentId = studentIds[random_index];
+			auto [giftCard, studentId] = giftCards[numStudents - numGiftCards];
+			numGiftCards--;
+			w->deposit(sodaCost);
+			watCards[studentId] = w;
+			giftCard.delivery(w);
 			prt.print(Printer::Kind::Groupoff, 'D', studentId, sodaCost);
-			giftCards.erase(giftCards.begin() + random_index);
-			studentIds.erase(studentIds.begin() + random_index);
-		}  // _Accept
+		}
 	}
-	prt.print(Printer::Kind::Groupoff, 'F');  // finished
+	prt.print(Printer::Kind::Groupoff, 'F');
 }
