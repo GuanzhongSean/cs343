@@ -34,8 +34,7 @@ _Task Prioritized {
 				if (priority == low) {
 					me = DontWantIn;
 					uFence();  // prevent hardware reordering (x86)
-					while (you == WantIn) {
-					}
+					while (you == WantIn) {}
 				}
 			}
 			CriticalSection();		// critical section

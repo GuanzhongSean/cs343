@@ -30,8 +30,7 @@ _Task Retract {
 				if (you == DontWantIn) break;
 				me = DontWantIn;
 				uFence();  // prevent hardware reordering (x86)
-				while (you == WantIn) {
-				}
+				while (you == WantIn) {}
 			}
 			CriticalSection();		// critical section
 			if (!done) count += 1;	// count while both threads running

@@ -31,8 +31,7 @@ TallyVotes::Tour TallyVotes::vote(unsigned int id, Ballot ballot) {
 					break;
 				}
 			}
-		} catch (uMutexFailure::RendezvousFailure &) {
-		}
+		} catch (uMutexFailure::RendezvousFailure &) {}
 		waiting--;
 		PRINT(printer.print(id, Voter::States::Unblock, waiting);)
 	} else {

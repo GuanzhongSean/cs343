@@ -18,8 +18,7 @@ int main(int argc, char *argv[]) {
 	int i, filterIndex, inputIndex = -1, outputIndex = -1;
 	struct cmd_error {};
 
-	for (i = 1; i < argc && argv[i][0] == '-'; i++) {
-	}
+	for (i = 1; i < argc && argv[i][0] == '-'; i++) {}
 	filterIndex = i - 1;
 	if (i < argc) {
 		inputIndex = i;

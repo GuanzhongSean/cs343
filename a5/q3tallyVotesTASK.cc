@@ -72,7 +72,6 @@ void TallyVotes::main() {
 			or _Accept(~TallyVotes) {
 				break;
 			}
-		} catch (uMutexFailure::RendezvousFailure &) {
-		}
+		} catch (uMutexFailure::RendezvousFailure &) {}
 	}
 }

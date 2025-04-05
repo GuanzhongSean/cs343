@@ -23,8 +23,7 @@ void TallyVotes::wait() {
 			}
 			_Else {	 // do not wait if no callers
 			}		 // _Accept
-		} catch (uMutexFailure::RendezvousFailure &) {
-		}
+		} catch (uMutexFailure::RendezvousFailure &) {}
 	}  // while
 }
 
