@@ -1,5 +1,7 @@
+OPT := -O2
+
 CXX = u++
-CXXFLAGS = -g -quiet -Wall -MMD -Wno-unused-parameter -Wno-comment
+CXXFLAGS = -g -quiet -Wall -Wextra -MMD ${OPT} -nodebug -Wno-unused-parameter -Wno-comment
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}
 
 OBJECTS1 = main.o config.o printer.o bank.o parent.o watcardOffice.o watcard.o groupoff.o nameServer.o vendingMachine.o bottlingPlant.o truck.o student.o

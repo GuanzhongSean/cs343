@@ -20,7 +20,7 @@ void Student::main() {
 	unsigned int free = 0;
 	for (unsigned int purchased = 0; purchased < purchaseNum; purchased++) {
 		yield(prng(1, 10));
-		WATCard* card;
+		WATCard* card = nullptr;
 		while (true) {
 			try {
 				_Select(giftcard) {
