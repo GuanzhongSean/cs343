@@ -84,7 +84,7 @@ void WATCardOffice::Courier::main() {
 		bank.withdraw(sid, amount);
 		card->deposit(amount);
 
-		if (prng(0, 5) == 0) {
+		if (prng(6) == 0) {
 			job->result.delivery(new Lost());
 			prt.print(Printer::Kind::Courier, lid, 'L', sid);
 		} else {

@@ -31,7 +31,7 @@ void BottlingPlant::main() {
 	while (true) {
 		unsigned int total = 0;
 		for (int i = 0; i < numFlavours; i++) {
-			currentStorage[i] = prng(0, maxStockPerFlavour);
+			currentStorage[i] = prng(0, maxShippedPerFlavour);
 			total += currentStorage[i];
 		}
 		yield(timeBetweenShipments);

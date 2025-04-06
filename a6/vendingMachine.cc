@@ -62,7 +62,7 @@ void VendingMachine::main() {
 		or _When(!isRestocking) _Accept(buy) {
 			if (stocks[flavour] == 0) {
 				raiseType = RaiseType::stock;
-			} else if (prng(0, 4) == 0) {
+			} else if (prng(5) == 0) {
 				stocks[flavour]--;
 				raiseType = RaiseType::free;
 				prt.print(Printer::Kind::Vending, id, 'A');

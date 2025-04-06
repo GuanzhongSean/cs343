@@ -54,7 +54,7 @@ void Truck::main() {
 				prt.print(Printer::Kind::Truck, 'U', id, numNotReplenished);
 			}
 			prt.print(Printer::Kind::Truck, 'D', id, totalSodas);
-			if (prng(1, 100) == 1) {
+			if (prng(100) == 0) {
 				prt.print(Printer::Kind::Truck, 'W');
 				yield(10);
 			}

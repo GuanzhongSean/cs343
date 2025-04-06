@@ -16,8 +16,8 @@ void Parent::main() {
 		}
 		_Else {
 			yield(parentalDelay);
-			unsigned int id = prng(numStudents);
 			int amount = prng(1, 3);
+			unsigned int id = prng(numStudents);
 			bank.deposit(id, amount);
 			total += amount;
 			prt.print(Printer::Kind::Parent, 'D', id, amount);
