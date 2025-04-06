@@ -28,7 +28,7 @@ clean :						# remove files that can be regenerated
 	rm -f *.d *.o ${EXECS} test_results/ a.out
 
 test:
-	python test.py
+	fold -w120 *.testdoc | wc -l
 
 submit:
 	submit cs343 6 .
